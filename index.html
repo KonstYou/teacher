@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lexicon Teachers Area & Quiz Panel | teacher.lexicon-school.gr</title>
+    <meta name="description" content="Lexicon Foreign Language Center Teacher Portal & Grammar Quiz Platform.">
+    <link rel="icon" type="image/png" href="https://i.ibb.co/4ZvfRB5q/Lexicon.png">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        lexicon: {
+                            50: '#eef6ff',
+                            100: '#d9eafd',
+                            500: '#1565c0',
+                            600: '#0d47a1',
+                            700: '#0a3578',
+                            accent: '#42a5f5',
+                            darkBg: '#0f172a',
+                            darkCard: '#1e293b'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            user-select: none;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .dark .glass-card {
+            background: rgba(30, 41, 59, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .animated-gradient {
+            background: linear-gradient(-45deg, #0d47a1, #1565c0, #42a5f5, #1976d2);
+            background-size: 400% 400%;
+            animation: gradientBG 12s ease infinite;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .option-card {
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .option-card:hover {
+            transform: translateY(-3px);
+        }
+
+        /* Pulse animation for streaks */
+        @keyframes pulseStreak {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+        }
+        .streak-active {
+            animation: pulseStreak 0.8s ease infinite;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-100 min-h-screen transition-colors duration-300 flex flex-col">
+
+    <!-- Navigation Bar -->
+    <nav class="sticky top-0 z-40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 lg:px-8 py-3.5 transition-colors">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <!-- Brand Logo -->
+            <div class="flex items-center gap-3">
+                <img src="https://i.ibb.co/4ZvfRB5q/Lexicon.png" alt="Lexicon Logo" class="h-10 w-auto rounded-lg shadow-sm" onerror="this.src='https://placehold.co/80x80/1565c0/fff?text=L'">
+                <div>
+                    <span class="font-extrabold text-xl tracking-tight bg-gradient-to-r from-lexicon-500 to-lexicon-accent bg-clip-text text-transparent">LEXICON</span>
+                    <span class="block text-xs font-semibold text-slate-500 dark:text-slate-400">Teachers Area & Quiz Portal</span>
+                </div>
+            </div>
+
+            <!-- Header Controls -->
+            <div class="flex items-center gap-3">
+                <!-- Current Role Tag -->
+                <div id="roleBadge" class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold bg-amber-100 dark:bg-amber-900/50 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-700">
+                    <i class="fa-solid fa-user-clock"></i>
+                    <span id="roleBadgeText">Guest Mode (5 Qs)</span>
+                </div>
+
+                <!-- Role Switcher Button -->
+                <button onclick="openRoleModal()" class="px-3.5 py-1.5 rounded-xl bg-lexicon-50 dark:bg-slate-800 text-lexicon-600 dark:text-lexicon-accent hover:bg-lexicon-100 dark:hover:bg-slate-700 font-semibold text-sm transition flex items-center gap-2 border border-lexicon-200 dark:border-slate-700 shadow-sm">
+                    <i class="fa-solid fa-user-gear"></i>
+                    <span class="hidden sm:inline">Switch Role</span>
+                </button>
+
+                <!-- Dark Mode Toggle -->
+                <button onclick="toggleDarkMode()" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition">
+                    <i id="themeIcon" class="fa-solid fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow container mx-auto px-4 py-8 max-w-5xl">
+        
+        <!-- ================= VIEW 1: ROLE SELECTION MODAL ================= -->
+        <div id="roleModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-sm transition-opacity duration-300">
+            <div class="bg-white dark:bg-slate-800 rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-200 dark:border-slate-700 relative overflow-hidden">
+                <!-- Header Accent -->
+                <div class="h-2 w-full bg-gradient-to-r from-lexicon-500 to-lexicon-accent absolute top-0 left-0"></div>
+
+                <div class="text-center mb-6 pt-2">
+                    <div class="w-16 h-16 bg-lexicon-50 dark:bg-slate-700 text-lexicon-500 dark:text-lexicon-accent rounded-2xl flex items-center justify-center mx-auto mb-3 text-2xl shadow-inner">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-slate-800 dark:text-white">Welcome to Lexicon Quiz Panel</h2>
+                    <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Select your access mode to continue</p>
+                </div>
+
+                <div class="space-y-4">
+                    <!-- Guest Button -->
+                    <button onclick="selectGuestRole()" class="w-full p-4 rounded-2xl border-2 border-slate-200 dark:border-slate-700 hover:border-lexicon-500 dark:hover:border-lexicon-accent bg-slate-50 dark:bg-slate-700/50 hover:bg-white dark:hover:bg-slate-700 transition group text-left flex items-start gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 flex items-center justify-center text-xl shrink-0 group-hover:scale-110 transition">
+                            <i class="fa-solid fa-user"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold text-slate-800 dark:text-white group-hover:text-lexicon-600 dark:group-hover:text-lexicon-accent transition">Continue as Guest / Student</div>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Instant access limited to 5 practice questions per session.</p>
+                        </div>
+                    </button>
+
+                    <!-- Teacher Button -->
+                    <button onclick="showTeacherLogin()" class="w-full p-4 rounded-2xl border-2 border-lexicon-200 dark:border-lexicon-900/50 hover:border-lexicon-500 bg-lexicon-50/60 dark:bg-slate-700/80 hover:bg-lexicon-50 dark:hover:bg-slate-700 transition group text-left flex items-start gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-lexicon-500 text-white flex items-center justify-center text-xl shrink-0 group-hover:scale-110 transition shadow-md shadow-lexicon-500/20">
+                            <i class="fa-solid fa-key"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold text-lexicon-600 dark:text-lexicon-accent">Teacher Access (Passcode Required)</div>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Unlimited 15 questions, customizable timer, full answer key & student scores.</p>
+                        </div>
+                    </button>
+                </div>
+
+                <!-- Teacher Login Sub-Form (Hidden by default) -->
+                <div id="teacherLoginForm" class="hidden mt-5 pt-5 border-t border-slate-200 dark:border-slate-700">
+                    <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-2 uppercase tracking-wider">
+                        Enter Teacher Security Passcode
+                    </label>
+                    <div class="flex gap-2">
+                        <input type="password" id="passcodeInput" placeholder="e.g. LEXICON2026" class="flex-grow px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 dark:bg-slate-900 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-lexicon-500 text-sm">
+                        <button onclick="verifyTeacherPasscode()" class="px-5 py-2.5 bg-lexicon-500 hover:bg-lexicon-600 text-white font-bold rounded-xl text-sm transition shadow-md">
+                            Verify
+                        </button>
+                    </div>
+                    <div id="passcodeError" class="hidden text-xs text-red-500 dark:text-red-400 mt-2 font-medium flex items-center gap-1">
+                        <i class="fa-solid fa-circle-exclamation"></i> Invalid passcode. Please try again.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= VIEW 2: QUIZ DASHBOARD / CONFIG ================= -->
+        <div id="quizDashboard" class="glass-card rounded-3xl p-6 sm:p-10 shadow-xl border mb-8">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-slate-200 dark:border-slate-700">
+                <div>
+                    <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-lexicon-50 dark:bg-slate-800 text-lexicon-600 dark:text-lexicon-accent border border-lexicon-200 dark:border-slate-700">
+                        Grammar Module
+                    </span>
+                    <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-800 dark:text-white mt-2">
+                        Present Simple vs. Present Continuous
+                    </h1>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm mt-1">
+                        Practice time expressions, stative verbs, and verb forms with immediate audio feedback.
+                    </p>
+                </div>
+
+                <!-- Teacher Controls Panel -->
+                <div id="teacherSettings" class="bg-slate-50 dark:bg-slate-800/80 p-4 rounded-2xl border border-slate-200 dark:border-slate-700">
+                    <span class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-3 uppercase tracking-wider">
+                        <i class="fa-solid fa-sliders text-lexicon-500"></i> Settings & Configuration
+                    </span>
+                    <div class="grid grid-cols-2 gap-3 text-xs">
+                        <div>
+                            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Questions:</label>
+                            <select id="questionCountSelect" class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg p-1.5 font-medium">
+                                <option value="5">5 Questions</option>
+                                <option value="10">10 Questions</option>
+                                <option value="15" selected>15 Questions (Full)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Timer / Question:</label>
+                            <select id="timerSelect" class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg p-1.5 font-medium">
+                                <option value="0">No Timer</option>
+                                <option value="15">15 Seconds</option>
+                                <option value="30" selected>30 Seconds</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Start Button Box -->
+            <div class="pt-8 text-center">
+                <button onclick="startQuiz()" class="px-10 py-4 bg-gradient-to-r from-lexicon-500 to-lexicon-600 hover:from-lexicon-600 hover:to-lexicon-700 text-white font-extrabold text-lg rounded-2xl shadow-lg shadow-lexicon-500/30 hover:shadow-xl hover:scale-105 transition transform flex items-center gap-3 mx-auto">
+                    <i class="fa-solid fa-play"></i> Start Quiz Challenge
+                </button>
+            </div>
+        </div>
+
+        <!-- ================= VIEW 3: ACTIVE QUIZ INTERFACE ================= -->
+        <div id="quizContainer" class="hidden glass-card rounded-3xl p-6 sm:p-10 shadow-xl border">
+            <!-- Progress & Stats Header -->
+            <div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-200 dark:border-slate-700 gap-2">
+                <!-- Question Counter -->
+                <div>
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">Question</span>
+                    <span id="questionProgressText" class="text-lg font-extrabold text-slate-800 dark:text-white">1 / 15</span>
+                </div>
+
+                <!-- Live Timer Indicator -->
+                <div id="timerContainer" class="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 px-4 py-2 rounded-2xl border border-slate-200 dark:border-slate-700">
+                    <i class="fa-solid fa-clock text-amber-500 animate-pulse"></i>
+                    <span id="timerDisplay" class="font-mono font-extrabold text-slate-800 dark:text-white text-lg">30s</span>
+                </div>
+
+                <!-- Streak & Score -->
+                <div class="flex items-center gap-4">
+                    <div id="streakBox" class="flex items-center gap-1.5 bg-orange-50 dark:bg-orange-950/40 px-3 py-1.5 rounded-xl border border-orange-200 dark:border-orange-800 text-orange-600 dark:text-orange-400 text-sm font-bold">
+                        <i class="fa-solid fa-fire text-amber-500"></i>
+                        <span id="streakCount">0</span>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">Score</span>
+                        <span id="liveScore" class="text-lg font-extrabold text-lexicon-500">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="w-full bg-slate-200 dark:bg-slate-700 h-2.5 rounded-full overflow-hidden mb-8">
+                <div id="progressBar" class="h-full bg-gradient-to-r from-lexicon-500 to-lexicon-accent transition-all duration-300 w-0"></div>
+            </div>
+
+            <!-- Question Card -->
+            <div class="mb-8">
+                <span id="grammarBadge" class="inline-block px-3 py-1 rounded-lg text-xs font-bold bg-slate-100 dark:bg-slate-800 text-lexicon-600 dark:text-lexicon-accent mb-3">
+                    Grammar Focus
+                </span>
+                <h2 id="questionText" class="text-xl sm:text-2xl font-bold text-slate-800 dark:text-white leading-relaxed">
+                    <!-- Dynamic Question inserted here -->
+                </h2>
+            </div>
+
+            <!-- Options Grid -->
+            <div id="optionsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                <!-- Option buttons populated by JS -->
+            </div>
+
+            <!-- Explanation & Feedback Box (Hidden until answer chosen) -->
+            <div id="feedbackBox" class="hidden p-5 rounded-2xl mb-6 transition-all border">
+                <div class="flex items-start gap-3">
+                    <div id="feedbackIcon" class="text-xl mt-0.5"></div>
+                    <div>
+                        <h4 id="feedbackTitle" class="font-bold text-base mb-1"></h4>
+                        <p id="feedbackExplanation" class="text-sm leading-relaxed"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Next Question Button -->
+            <div class="flex justify-end">
+                <button id="nextBtn" onclick="nextQuestion()" class="hidden px-8 py-3 bg-lexicon-500 hover:bg-lexicon-600 text-white font-bold rounded-xl transition shadow-md flex items-center gap-2">
+                    <span>Next Question</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- ================= VIEW 4: POST-QUIZ RESULTS & REPORT CARD ================= -->
+        <div id="resultsContainer" class="hidden glass-card rounded-3xl p-6 sm:p-10 shadow-xl border">
+            <!-- Header Score Banner -->
+            <div class="text-center pb-8 border-b border-slate-200 dark:border-slate-700">
+                <div class="w-20 h-20 rounded-full bg-lexicon-50 dark:bg-slate-800 border-4 border-lexicon-500 flex items-center justify-center mx-auto mb-4 text-3xl text-lexicon-500 shadow-lg">
+                    <i class="fa-solid fa-trophy"></i>
+                </div>
+                <h2 class="text-3xl font-extrabold text-slate-800 dark:text-white">Quiz Completed!</h2>
+                <p class="text-slate-500 dark:text-slate-400 text-sm mt-1">Here is your performance summary for Lexicon English Grammar</p>
+
+                <div class="mt-6 flex justify-center items-center gap-6">
+                    <div class="bg-slate-50 dark:bg-slate-800 px-6 py-3 rounded-2xl border border-slate-200 dark:border-slate-700">
+                        <span class="text-xs text-slate-400 font-bold uppercase block">Final Score</span>
+                        <span id="finalScoreText" class="text-2xl font-black text-lexicon-500">0 / 0</span>
+                    </div>
+                    <div class="bg-slate-50 dark:bg-slate-800 px-6 py-3 rounded-2xl border border-slate-200 dark:border-slate-700">
+                        <span class="text-xs text-slate-400 font-bold uppercase block">Accuracy</span>
+                        <span id="accuracyText" class="text-2xl font-black text-emerald-500">0%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Answer Breakdown -->
+            <div class="py-8">
+                <h3 class="text-lg font-bold text-slate-800 dark:text-white mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-list-check text-lexicon-500"></i> Detailed Rule Breakdown
+                </h3>
+                <div id="breakdownContainer" class="space-y-4">
+                    <!-- Dynamic review list populated by JS -->
+                </div>
+            </div>
+
+            <!-- Actions Bar -->
+            <div class="flex flex-wrap gap-4 justify-center pt-6 border-t border-slate-200 dark:border-slate-700">
+                <button onclick="restartQuiz()" class="px-6 py-3 bg-lexicon-500 hover:bg-lexicon-600 text-white font-bold rounded-xl transition shadow-md flex items-center gap-2">
+                    <i class="fa-solid fa-rotate-right"></i> Retake Quiz
+                </button>
+                <button onclick="window.print()" class="px-6 py-3 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-800 dark:text-white font-bold rounded-xl transition flex items-center gap-2">
+                    <i class="fa-solid fa-print"></i> Print Score Report
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-auto bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-6 text-center text-xs text-slate-500 dark:text-slate-400">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-3">
+            <div>
+                © 2000 - 2026 <strong>Lexicon Foreign Language Center</strong> | Keratsini
+            </div>
+            <div class="flex items-center gap-4">
+                <span><i class="fa-solid fa-globe text-lexicon-500"></i> teacher.lexicon-school.gr</span>
+                <a href="https://www.lexicon-school.gr" target="_blank" class="hover:underline text-lexicon-500">Main Website</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ================= CONFIGURATION & QUESTION BANK =================
+        const TEACHER_PASSCODE = "LEXICON2026"; // Security Passcode
+
+        const questionBank = [
+            {
+                id: 1,
+                question: "Listen! She ________ the piano in the music room.",
+                options: ["plays", "is playing", "play", "are playing"],
+                correct: 1,
+                focus: "Present Continuous (Action happening now)",
+                explanation: "The command word 'Listen!' indicates an action taking place right now at the moment of speaking. Therefore, we use the Present Continuous ('is playing')."
+            },
+            {
+                id: 2,
+                question: "My father usually ________ to work by car every morning.",
+                options: ["is going", "go", "goes", "has gone"],
+                correct: 2,
+                focus: "Present Simple (Habitual Action & 3rd Person Singular)",
+                explanation: "Time markers like 'usually' and 'every morning' denote regular habits. For 3rd person singular ('My father' / 'he'), we add '-es' to the verb ('goes')."
+            },
+            {
+                id: 3,
+                question: "Right now, the students ________ a grammar test.",
+                options: ["write", "are writing", "is writing", "writes"],
+                correct: 1,
+                focus: "Present Continuous (Time expression 'Right now')",
+                explanation: "'Right now' specifies a temporary activity occurring currently. 'Students' is plural, requiring 'are writing'."
+            },
+            {
+                id: 4,
+                question: "I ________ the answer to this difficult question.",
+                options: ["know", "am knowing", "knows", "are knowing"],
+                correct: 0,
+                focus: "Stative Verbs (Non-continuous)",
+                explanation: "'Know' is a stative verb expressing a mental state. Stative verbs are generally NOT used in the continuous form, so we use Present Simple ('know')."
+            },
+            {
+                id: 5,
+                question: "Water ________ at 100 degrees Celsius.",
+                options: ["is boiling", "boil", "boils", "are boiling"],
+                correct: 2,
+                focus: "Present Simple (General Truths / Scientific Facts)",
+                explanation: "Scientific facts and general truths are always expressed in the Present Simple tense."
+            },
+            {
+                id: 6,
+                question: "Why ________ you ________ your jacket? It isn't cold inside.",
+                options: ["do / wear", "are / wearing", "does / wear", "is / wearing"],
+                correct: 1,
+                focus: "Present Continuous Question Form",
+                explanation: "Asking about an ongoing state or temporary choice right now requires 'Are you wearing'."
+            },
+            {
+                id: 7,
+                question: "Look at them! They ________ football in the garden.",
+                options: ["play", "plays", "are playing", "is playing"],
+                correct: 2,
+                focus: "Present Continuous ('Look!')",
+                explanation: "'Look at them!' draws attention to an immediate ongoing event, requiring Present Continuous with plural 'they' -> 'are playing'."
+            },
+            {
+                id: 8,
+                question: "She ________ French and English fluently.",
+                options: ["is speaking", "speaks", "speak", "are speaking"],
+                correct: 1,
+                focus: "Present Simple (Permanent Ability)",
+                explanation: "Language abilities and permanent facts take the Present Simple tense ('speaks')."
+            },
+            {
+                id: 9,
+                question: "Be quiet, please! The baby ________ right now.",
+                options: ["sleeps", "is sleeping", "sleep", "are sleeping"],
+                correct: 1,
+                focus: "Present Continuous (Imperative Context)",
+                explanation: "'Be quiet!' signals an event occurring at this instant ('is sleeping')."
+            },
+            {
+                id: 10,
+                question: "I ________ ice cream, especially on hot summer days.",
+                options: ["am liking", "like", "likes", "is liking"],
+                correct: 1,
+                focus: "Stative Verbs ('like')",
+                explanation: "Verbs of emotion like 'like', 'love', and 'hate' are stative and take the Present Simple form."
+            },
+            {
+                id: 11,
+                question: "Tom ________ his homework at the moment.",
+                options: ["doesn't do", "isn't doing", "don't do", "aren't doing"],
+                correct: 1,
+                focus: "Present Continuous Negative",
+                explanation: "'At the moment' indicates current progress. The negative form for 'Tom' is 'isn't doing'."
+            },
+            {
+                id: 12,
+                question: "How often ________ you ________ to the cinema?",
+                options: ["are / going", "do / go", "does / go", "is / going"],
+                correct: 1,
+                focus: "Present Simple Questions ('How often')",
+                explanation: "'How often' asks about frequency and routine habits, requiring auxiliary 'do' + base verb 'go'."
+            },
+            {
+                id: 13,
+                question: "Look! The sun ________ behind the clouds.",
+                options: ["disappears", "is disappearing", "disappear", "are disappearing"],
+                correct: 1,
+                focus: "Present Continuous (In-progress visual event)",
+                explanation: "Visual imperative 'Look!' calls attention to an action in progress ('is disappearing')."
+            },
+            {
+                id: 14,
+                question: "My brother ________ TV every afternoon after school.",
+                options: ["watches", "is watching", "watch", "are watching"],
+                correct: 0,
+                focus: "Present Simple (Spelling Rule -ches)",
+                explanation: "Verbs ending in -ch add '-es' in the 3rd person singular for regular habits ('watches')."
+            },
+            {
+                id: 15,
+                question: "We ________ our grandparents this weekend.",
+                options: ["visit", "are visiting", "visits", "visiting"],
+                correct: 1,
+                focus: "Present Continuous (Future Arrangements)",
+                explanation: "Present Continuous is frequently used to express fixed personal plans and arrangements in the near future."
+            }
+        ];
+
+        // ================= STATE MANAGEMENT =================
+        let userRole = 'guest'; // 'guest' or 'teacher'
+        let currentQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let streak = 0;
+        let timerInterval = null;
+        let timeLeft = 30;
+        let timerDuration = 30;
+        let userAnswers = [];
+
+        // ================= AUDIO SYNTHESIZER (WEB AUDIO API) =================
+        const AudioFX = {
+            ctx: null,
+            init() {
+                if (!this.ctx) {
+                    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+            },
+            playCorrect() {
+                this.init();
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(523.25, this.ctx.currentTime); // C5
+                osc.frequency.exponentialRampToValueAtTime(659.25, this.ctx.currentTime + 0.15); // E5
+                gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.3);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start();
+                osc.stop(this.ctx.currentTime + 0.3);
+            },
+            playWrong() {
+                this.init();
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(220, this.ctx.currentTime); // A3
+                osc.frequency.exponentialRampToValueAtTime(130.81, this.ctx.currentTime + 0.25); // C3
+                gain.gain.setValueAtTime(0.25, this.ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.3);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start();
+                osc.stop(this.ctx.currentTime + 0.3);
+            }
+        };
+
+        // ================= DOM INITIALIZATION =================
+        window.addEventListener('DOMContentLoaded', () => {
+            // Default load role modal
+            openRoleModal();
+        });
+
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+            const themeIcon = document.getElementById('themeIcon');
+            if (document.documentElement.classList.contains('dark')) {
+                themeIcon.className = 'fa-solid fa-sun';
+            } else {
+                themeIcon.className = 'fa-solid fa-moon';
+            }
+        }
+
+        // ================= ROLE SELECTION LOGIC =================
+        function openRoleModal() {
+            document.getElementById('roleModal').classList.remove('hidden');
+            document.getElementById('teacherLoginForm').classList.add('hidden');
+            document.getElementById('passcodeError').classList.add('hidden');
+            document.getElementById('passcodeInput').value = '';
+        }
+
+        function selectGuestRole() {
+            userRole = 'guest';
+            document.getElementById('roleModal').classList.add('hidden');
+            updateRoleUI();
+        }
+
+        function showTeacherLogin() {
+            document.getElementById('teacherLoginForm').classList.remove('hidden');
+            document.getElementById('passcodeInput').focus();
+        }
+
+        function verifyTeacherPasscode() {
+            const input = document.getElementById('passcodeInput').value.trim();
+            if (input === TEACHER_PASSCODE) {
+                userRole = 'teacher';
+                document.getElementById('roleModal').classList.add('hidden');
+                updateRoleUI();
+            } else {
+                document.getElementById('passcodeError').classList.remove('hidden');
+            }
+        }
+
+        function updateRoleUI() {
+            const roleBadgeText = document.getElementById('roleBadgeText');
+            const roleBadge = document.getElementById('roleBadge');
+            const teacherSettings = document.getElementById('teacherSettings');
+
+            if (userRole === 'teacher') {
+                roleBadgeText.innerText = "Teacher Mode (Full Access)";
+                roleBadge.className = "hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold bg-emerald-100 dark:bg-emerald-900/50 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700";
+                teacherSettings.classList.remove('opacity-50', 'pointer-events-none');
+            } else {
+                roleBadgeText.innerText = "Guest Mode (5 Questions Max)";
+                roleBadge.className = "hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold bg-amber-100 dark:bg-amber-900/50 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-700";
+                // Lock settings for guests
+                document.getElementById('questionCountSelect').value = "5";
+                teacherSettings.classList.add('opacity-50', 'pointer-events-none');
+            }
+        }
+
+        // ================= QUIZ ENGINE =================
+        function startQuiz() {
+            // Prepare question set based on role and settings
+            let desiredCount = parseInt(document.getElementById('questionCountSelect').value);
+            if (userRole === 'guest') desiredCount = 5;
+
+            // Shuffle questions
+            const shuffled = [...questionBank].sort(() => 0.5 - Math.random());
+            currentQuestions = shuffled.slice(0, desiredCount);
+
+            // Timer configuration
+            timerDuration = parseInt(document.getElementById('timerSelect').value);
+
+            // Reset state
+            currentQuestionIndex = 0;
+            score = 0;
+            streak = 0;
+            userAnswers = [];
+
+            // UI Switch
+            document.getElementById('quizDashboard').classList.add('hidden');
+            document.getElementById('resultsContainer').classList.add('hidden');
+            document.getElementById('quizContainer').classList.remove('hidden');
+
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            clearInterval(timerInterval);
+            const q = currentQuestions[currentQuestionIndex];
+
+            // Update Progress & Text
+            document.getElementById('questionProgressText').innerText = `${currentQuestionIndex + 1} / ${currentQuestions.length}`;
+            document.getElementById('grammarBadge').innerText = q.focus;
+            document.getElementById('questionText').innerText = q.question;
+            document.getElementById('liveScore').innerText = score;
+            document.getElementById('streakCount').innerText = streak;
+
+            // Update Progress Bar
+            const percent = ((currentQuestionIndex) / currentQuestions.length) * 100;
+            document.getElementById('progressBar').style.width = `${percent}%`;
+
+            // Reset Feedback & Next Button
+            document.getElementById('feedbackBox').classList.add('hidden');
+            document.getElementById('nextBtn').classList.add('hidden');
+
+            // Populate Options
+            const container = document.getElementById('optionsContainer');
+            container.innerHTML = '';
+
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = `option-card w-full p-4 text-left font-semibold rounded-2xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-lexicon-500 dark:hover:border-lexicon-accent text-slate-800 dark:text-white transition flex items-center justify-between group`;
+                btn.onclick = () => selectOption(idx);
+                btn.innerHTML = `
+                    <span class="flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-700 group-hover:bg-lexicon-500 group-hover:text-white text-slate-500 dark:text-slate-300 font-bold text-xs flex items-center justify-center transition">
+                            ${String.fromCharCode(65 + idx)}
+                        </span>
+                        <span class="text-base">${opt}</span>
+                    </span>
+                    <i class="fa-regular fa-circle text-slate-300 dark:text-slate-600 group-hover:text-lexicon-500 text-lg"></i>
+                `;
+                container.appendChild(btn);
+            });
+
+            // Timer Setup
+            if (timerDuration > 0) {
+                document.getElementById('timerContainer').classList.remove('hidden');
+                timeLeft = timerDuration;
+                document.getElementById('timerDisplay').innerText = `${timeLeft}s`;
+                timerInterval = setInterval(() => {
+                    timeLeft--;
+                    document.getElementById('timerDisplay').innerText = `${timeLeft}s`;
+                    if (timeLeft <= 0) {
+                        clearInterval(timerInterval);
+                        handleTimeout();
+                    }
+                }, 1000);
+            } else {
+                document.getElementById('timerContainer').classList.add('hidden');
+            }
+        }
+
+        function selectOption(selectedIdx) {
+            clearInterval(timerInterval);
+            const q = currentQuestions[currentQuestionIndex];
+            const isCorrect = selectedIdx === q.correct;
+
+            // Record Answer
+            userAnswers.push({
+                question: q,
+                userOption: selectedIdx,
+                isCorrect: isCorrect
+            });
+
+            // Sound & Score Logic
+            if (isCorrect) {
+                AudioFX.playCorrect();
+                score += 10 + (streak * 2); // Streak bonus
+                streak++;
+            } else {
+                AudioFX.playWrong();
+                streak = 0;
+            }
+
+            // Update UI Options visual feedback
+            const container = document.getElementById('optionsContainer');
+            const buttons = container.querySelectorAll('button');
+
+            buttons.forEach((btn, idx) => {
+                btn.disabled = true;
+                btn.classList.remove('hover:border-lexicon-500');
+
+                if (idx === q.correct) {
+                    btn.className = "w-full p-4 text-left font-bold rounded-2xl border-2 border-emerald-500 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 flex items-center justify-between";
+                    btn.innerHTML += `<i class="fa-solid fa-circle-check text-emerald-500 text-xl"></i>`;
+                } else if (idx === selectedIdx && !isCorrect) {
+                    btn.className = "w-full p-4 text-left font-bold rounded-2xl border-2 border-red-500 bg-red-50 dark:bg-red-950/40 text-red-800 dark:text-red-300 flex items-center justify-between";
+                    btn.innerHTML += `<i class="fa-solid fa-circle-xmark text-red-500 text-xl"></i>`;
+                }
+            });
+
+            // Display Feedback Box
+            const feedbackBox = document.getElementById('feedbackBox');
+            const feedbackIcon = document.getElementById('feedbackIcon');
+            const feedbackTitle = document.getElementById('feedbackTitle');
+            const feedbackExplanation = document.getElementById('feedbackExplanation');
+
+            feedbackBox.classList.remove('hidden');
+            if (isCorrect) {
+                feedbackBox.className = "p-5 rounded-2xl mb-6 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 text-emerald-900 dark:text-emerald-200";
+                feedbackIcon.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-500"></i>`;
+                feedbackTitle.innerText = "Excellent! Correct Answer";
+            } else {
+                feedbackBox.className = "p-5 rounded-2xl mb-6 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 text-red-900 dark:text-red-200";
+                feedbackIcon.innerHTML = `<i class="fa-solid fa-circle-xmark text-red-500"></i>`;
+                feedbackTitle.innerText = "Incorrect!";
+            }
+            feedbackExplanation.innerText = q.explanation;
+
+            document.getElementById('nextBtn').classList.remove('hidden');
+        }
+
+        function handleTimeout() {
+            AudioFX.playWrong();
+            streak = 0;
+            const q = currentQuestions[currentQuestionIndex];
+            
+            userAnswers.push({
+                question: q,
+                userOption: -1,
+                isCorrect: false
+            });
+
+            const feedbackBox = document.getElementById('feedbackBox');
+            feedbackBox.classList.remove('hidden');
+            feedbackBox.className = "p-5 rounded-2xl mb-6 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 text-amber-900 dark:text-amber-200";
+            document.getElementById('feedbackIcon').innerHTML = `<i class="fa-solid fa-clock text-amber-500"></i>`;
+            document.getElementById('feedbackTitle').innerText = "Time's Up!";
+            document.getElementById('feedbackExplanation').innerText = q.explanation;
+
+            document.getElementById('nextBtn').classList.remove('hidden');
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < currentQuestions.length) {
+                renderQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        // ================= POST-QUIZ RESULTS =================
+        function showResults() {
+            document.getElementById('quizContainer').classList.add('hidden');
+            document.getElementById('resultsContainer').classList.remove('hidden');
+
+            const total = currentQuestions.length;
+            const correctCount = userAnswers.filter(a => a.isCorrect).length;
+            const accuracy = Math.round((correctCount / total) * 100);
+
+            document.getElementById('finalScoreText').innerText = `${correctCount} / ${total}`;
+            document.getElementById('accuracyText').innerText = `${accuracy}%`;
+
+            // Build detailed breakdown list
+            const container = document.getElementById('breakdownContainer');
+            container.innerHTML = '';
+
+            userAnswers.forEach((ans, idx) => {
+                const item = document.createElement('div');
+                item.className = `p-4 rounded-2xl border ${ans.isCorrect ? 'bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800' : 'bg-red-50/50 dark:bg-red-950/20 border-red-200 dark:border-red-800'}`;
+                
+                const userChoice = ans.userOption >= 0 ? ans.question.options[ans.userOption] : "No Answer (Timed Out)";
+                const correctChoice = ans.question.options[ans.question.correct];
+
+                item.innerHTML = `
+                    <div class="flex items-start gap-3">
+                        <span class="w-6 h-6 rounded-full ${ans.isCorrect ? 'bg-emerald-500' : 'bg-red-500'} text-white text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">
+                            ${idx + 1}
+                        </span>
+                        <div class="flex-grow">
+                            <h4 class="font-bold text-slate-800 dark:text-white text-sm sm:text-base">${ans.question.question}</h4>
+                            <div class="text-xs mt-2 space-y-1">
+                                <p class="${ans.isCorrect ? 'text-emerald-700 dark:text-emerald-300' : 'text-red-700 dark:text-red-300'} font-semibold">
+                                    Your Choice: ${userChoice}
+                                </p>
+                                ${!ans.isCorrect ? `<p class="text-emerald-700 dark:text-emerald-300 font-semibold">Correct Answer: ${correctChoice}</p>` : ''}
+                                <p class="text-slate-600 dark:text-slate-400 mt-1 italic">${ans.question.explanation}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function restartQuiz() {
+            document.getElementById('resultsContainer').classList.add('hidden');
+            document.getElementById('quizDashboard').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
