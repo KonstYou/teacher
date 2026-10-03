@@ -157,7 +157,7 @@
                 <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div><h3 class="text-lg font-bold">Make it your challenge</h3><p class="text-sm text-slate-500 dark:text-slate-400">Choose a question count and timer before starting.</p></div>
                     <div class="grid grid-cols-2 gap-3 sm:w-[340px]">
-                        <label class="text-xs font-semibold text-slate-600 dark:text-slate-300">Questions<select id="questionCountSelect" class="mt-1 w-full rounded-xl border border-slate-200 bg-white p-2.5 text-sm dark:border-slate-700 dark:bg-slate-900"><option value="5">5 questions</option><option value="10">10 questions</option><option value="15" selected>15 questions</option><option value="20">20 questions</option></select></label>
+                        <label class="text-xs font-semibold text-slate-600 dark:text-slate-300">Questions<select id="questionCountSelect" class="mt-1 w-full rounded-xl border border-slate-200 bg-white p-2.5 text-sm dark:border-slate-700 dark:bg-slate-900"></select></label>
                         <label class="text-xs font-semibold text-slate-600 dark:text-slate-300">Timer per question<select id="timerSelect" class="mt-1 w-full rounded-xl border border-slate-200 bg-white p-2.5 text-sm dark:border-slate-700 dark:bg-slate-900"><option value="0">No timer</option><option value="15">15 seconds</option><option value="30" selected>30 seconds</option><option value="60">60 seconds</option></select></label>
                     </div>
                 </div>
@@ -498,7 +498,37 @@
             { id: 93, category: "vocab", question: "If you 'avoid' something, you try to ________ it.", options: ["stay away from", "look after", "take part in", "find out about"], correct: 0, focus: "Vocabulary (Phrasal meaning)", explanation: "Avoid means to stay away from or prevent contact with something." },
             { id: 94, category: "vocab", question: "The instructions say to ________ the form in blue ink.", options: ["fill in", "look up", "turn off", "give away"], correct: 0, focus: "Vocabulary (Phrasal verbs)", explanation: "To fill in a form means to write the required information on it." },
             { id: 95, category: "vocab", question: "A 'reliable' friend is someone you can ________.", options: ["depend on", "argue with", "laugh at", "wait for"], correct: 0, focus: "Vocabulary (Meaning in context)", explanation: "Reliable describes someone trustworthy whom you can depend on." },
-            { id: 96, category: "vocab", question: "The hotel was so ________ that we had to book a room months ahead.", options: ["popular", "empty", "silent", "ordinary"], correct: 0, focus: "Vocabulary (Meaning in context)", explanation: "A popular hotel is in high demand, which explains why it needs to be booked early." }
+            { id: 96, category: "vocab", question: "The hotel was so ________ that we had to book a room months ahead.", options: ["popular", "empty", "silent", "ordinary"], correct: 0, focus: "Vocabulary (Meaning in context)", explanation: "A popular hotel is in high demand, which explains why it needs to be booked early." },
+            { id: 99, category: "present", question: "The children ________ their grandparents every Sunday.", options: ["visit", "are visiting", "visits", "visited"], correct: 0, focus: "Present Simple (Regular routine)", explanation: "'Every Sunday' describes a routine. Use the base verb with the plural subject 'the children'." },
+            { id: 100, category: "present", question: "Why ________ Anna ________ a coat today? It's warm outside.", options: ["does / wear", "is / wearing", "do / wear", "are / wearing"], correct: 1, focus: "Present Continuous (Temporary action)", explanation: "'Today' describes a temporary situation. With Anna, use is + wearing." },
+            { id: 101, category: "present", question: "My parents ________ in a small village near Patras.", options: ["lives", "are living always", "live", "is living"], correct: 2, focus: "Present Simple (Permanent situation)", explanation: "A permanent home or situation is normally described with the Present Simple; 'parents' takes 'live'." },
+            { id: 102, category: "present", question: "Be careful! You ________ the wrong answer.", options: ["write", "are writing", "writes", "is writing"], correct: 1, focus: "Present Continuous (Happening now)", explanation: "The speaker is describing an action happening now: are writing." },
+            { id: 103, category: "present", question: "How many languages ________ your teacher ________?", options: ["is / speaking", "does / speak", "do / speaks", "does / speaks"], correct: 1, focus: "Present Simple (Questions)", explanation: "For a Present Simple question with 'your teacher' (he or she), use does + base form speak." },
+            { id: 104, category: "past", question: "We ________ the museum and then had lunch by the sea.", options: ["visited", "were visit", "have visited", "visiting"], correct: 0, focus: "Past Simple (Sequence of events)", explanation: "The sentence describes completed events in the past, so use the Past Simple: visited." },
+            { id: 105, category: "past", question: "During the two-hour journey, Mum ________ the map the entire time while Dad drove.", options: ["checked", "was checking", "checks", "has checked"], correct: 1, focus: "Past Continuous (Actions in progress together)", explanation: "The phrase 'the entire time' emphasizes an action in progress throughout another past action: was checking." },
+            { id: 106, category: "past", question: "They ________ the train, so they arrived late.", options: ["miss", "missed", "were miss", "have missed"], correct: 1, focus: "Past Simple (Finished event)", explanation: "The missed train is a completed past event. The Past Simple of 'miss' is 'missed'." },
+            { id: 107, category: "past", question: "I ________ breakfast when my friend called.", options: ["had", "was having", "have", "am having"], correct: 1, focus: "Past Continuous (Interrupted action)", explanation: "Breakfast was in progress when the call happened: was having." },
+            { id: 108, category: "past", question: "By the time she turned off her computer, she ________ the email.", options: ["had sent", "has sent", "was sending", "send"], correct: 0, focus: "Past Perfect (Earlier past action)", explanation: "The phrase 'by the time' sets a later past point. Use had + past participle for the action completed before that point." },
+            { id: 109, category: "future", question: "I ________ you as soon as I arrive.", options: ["call", "will call", "am called", "called"], correct: 1, focus: "Will (Future promise / decision)", explanation: "Use will + base verb for a future action promised or decided now." },
+            { id: 110, category: "future", question: "They ________ a new house next month; they have signed the contract.", options: ["are moving into", "move into yesterday", "will moved into", "has moved into"], correct: 0, focus: "Present Continuous (Fixed arrangement)", explanation: "A planned move with an arrangement already made can use the Present Continuous." },
+            { id: 111, category: "future", question: "Watch out! That glass ________ fall off the table.", options: ["will have", "is going to", "was", "does"], correct: 1, focus: "Going to (Prediction from evidence)", explanation: "The speaker can see an immediate risk, so use is going to + base verb." },
+            { id: 112, category: "future", question: "The conference ________ on 12 June and ________ for three days.", options: ["begins / lasts", "will began / last", "is begin / is lasting", "began / will lasts"], correct: 0, focus: "Present Simple (Scheduled events)", explanation: "Published schedules and programmes commonly use the Present Simple." },
+            { id: 113, category: "future", question: "At this time next year, I ________ at university.", options: ["will be studying", "studied", "am study", "will studied"], correct: 0, focus: "Future Continuous (Action in progress)", explanation: "Use will be + verb-ing for an action that will be in progress at a future time." },
+            { id: 114, category: "modal", question: "You ________ use your phone during the flight; please switch it off.", options: ["mustn't", "don't have to", "might", "could"], correct: 0, focus: "Mustn't (Prohibition)", explanation: "Mustn't says an action is not allowed." },
+            { id: 115, category: "modal", question: "______ you mind opening the window?", options: ["Would", "Must", "Should", "May to"], correct: 0, focus: "Would (Polite request)", explanation: "Would you mind + verb-ing is a polite request." },
+            { id: 116, category: "modal", question: "You ________ take a jacket. It may get cold this evening.", options: ["should", "mustn't", "couldn't", "have"], correct: 0, focus: "Should (Advice)", explanation: "Should is used to give advice or make a recommendation." },
+            { id: 117, category: "modal", question: "Nikos ________ speak three languages when he was ten.", options: ["can", "could", "must", "should"], correct: 1, focus: "Could (Past ability)", explanation: "Could expresses an ability someone had in the past." },
+            { id: 118, category: "modal", question: "You ________ finish the whole book tonight; the deadline is next week.", options: ["don't have to", "mustn't", "can't to", "shouldn't have"], correct: 0, focus: "Don't have to (No necessity)", explanation: "Don't have to means the action is not necessary. Mustn't would mean it is forbidden." },
+            { id: 119, category: "article", question: "She wants to be ________ doctor when she grows up.", options: ["a", "an", "the", "—"], correct: 0, focus: "Articles (A / An)", explanation: "Use 'a' before a singular countable profession beginning with a consonant sound." },
+            { id: 120, category: "article", question: "We usually go swimming ________ the summer.", options: ["at", "on", "in", "by"], correct: 2, focus: "Prepositions of time (Seasons)", explanation: "Use 'in' with seasons: in the summer, in winter." },
+            { id: 121, category: "article", question: "The pharmacy is ________ the bank and the post office.", options: ["between", "through", "above", "across"], correct: 0, focus: "Prepositions of place", explanation: "Between is used for something located in the space separating two places." },
+            { id: 122, category: "article", question: "There is ________ orange juice in the fridge if you are thirsty.", options: ["a few", "some", "many", "several"], correct: 1, focus: "Quantifiers (Some / Any)", explanation: "Use some with an uncountable noun in a positive sentence." },
+            { id: 123, category: "article", question: "The children walked ________ the bridge to reach the park.", options: ["across", "between", "underneath of", "during"], correct: 0, focus: "Prepositions of movement", explanation: "Across describes movement from one side of a surface or place to the other." },
+            { id: 124, category: "vocab", question: "The opposite of 'borrow' is ________.", options: ["lend", "keep", "return", "spend"], correct: 0, focus: "Vocabulary (Opposites)", explanation: "Borrow means to take something temporarily; lend means to give something temporarily." },
+            { id: 125, category: "vocab", question: "The instructions were brief, so they were ________.", options: ["short", "confusing", "expensive", "late"], correct: 0, focus: "Vocabulary (Synonyms)", explanation: "Brief means short in duration or length." },
+            { id: 126, category: "vocab", question: "Please ________ your shoes before entering the house.", options: ["take off", "put on", "look after", "turn up"], correct: 0, focus: "Vocabulary (Phrasal verbs)", explanation: "Take off means to remove a piece of clothing or footwear." },
+            { id: 127, category: "vocab", question: "The roads were ________ after the heavy snow, so we drove slowly.", options: ["slippery", "crowded", "dusty", "narrow"], correct: 0, focus: "Vocabulary (Adjectives in context)", explanation: "Snow can make roads slippery, which explains why careful driving was needed." },
+            { id: 128, category: "vocab", question: "If you arrive somewhere 'on time', you arrive ________.", options: ["at the scheduled time", "very early", "after everyone leaves", "without a plan"], correct: 0, focus: "Vocabulary (Phrases)", explanation: "On time means at the planned or scheduled time." }
         ];
 
         const ACCESS_PASSWORDS = { teacher: 'LEX029', student: 'LEXICON2026' };
@@ -620,10 +650,12 @@
             document.getElementById('roleBadge').className = isTeacher
                 ? 'hidden rounded-full bg-emerald-100 px-3 py-1.5 text-xs font-bold text-emerald-800 dark:bg-emerald-950 dark:text-emerald-200 sm:inline-flex'
                 : 'hidden rounded-full bg-blue-50 px-3 py-1.5 text-xs font-bold text-blue-800 dark:bg-blue-950 dark:text-blue-200 sm:inline-flex';
-            document.getElementById('questionCountSelect').value = isTeacher ? '15' : '5';
-            document.getElementById('questionCountSelect').disabled = !isTeacher;
-            document.getElementById('questionCountSelect').classList.toggle('opacity-60', !isTeacher);
-            document.getElementById('questionCountSelect').classList.toggle('cursor-not-allowed', !isTeacher);
+            const countSelect = document.getElementById('questionCountSelect');
+            const choices = isTeacher
+                ? [['5', '5 questions'], ['10', '10 questions'], ['15', '15 questions'], ['20', '20 questions'], ['all', 'All questions']]
+                : [['5', '5 questions'], ['10', '10 questions']];
+            countSelect.replaceChildren(...choices.map(([value, label]) => new Option(label, value)));
+            countSelect.value = isTeacher ? '15' : '5';
         }
 
         function syncThemeButton() {
@@ -684,7 +716,10 @@
                 return;
             }
             const selectedPool = selectedQuizId === 'mixed' ? questionBank : questionBank.filter(question => question.category === selectedQuizId);
-            const requestedCount = userRole === 'teacher' ? Number(document.getElementById('questionCountSelect').value) : 5;
+            const countChoice = document.getElementById('questionCountSelect').value;
+            const requestedCount = userRole === 'teacher'
+                ? (countChoice === 'all' ? selectedPool.length : Number(countChoice))
+                : Math.min(10, Number(countChoice));
             const desiredCount = Math.min(requestedCount, selectedPool.length);
 
             // Shuffle questions
