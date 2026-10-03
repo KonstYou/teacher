@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lexicon Teachers Area & Quiz Panel | teacher.lexicon-school.gr</title>
-    <meta name="description" content="Lexicon Foreign Language Center Teacher Portal & Grammar Quiz Platform.">
+    <meta name="description" content="Practice English grammar with the Lexicon interactive quiz.">
+    <meta name="theme-color" content="#0d47a1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="icon" type="image/png" href="https://i.ibb.co/4ZvfRB5q/Lexicon.png">
     
     <!-- Tailwind CSS -->
@@ -37,9 +40,11 @@
         
         body {
             font-family: 'Poppins', sans-serif;
-            user-select: none;
+            
         }
 
+        :focus-visible { outline: 3px solid #42a5f5; outline-offset: 3px; }
+        @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .01ms !important; } }
         .glass-card {
             background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(12px);
@@ -92,26 +97,16 @@
                 <img src="https://i.ibb.co/4ZvfRB5q/Lexicon.png" alt="Lexicon Logo" class="h-10 w-auto rounded-lg shadow-sm" onerror="this.src='https://placehold.co/80x80/1565c0/fff?text=L'">
                 <div>
                     <span class="font-extrabold text-xl tracking-tight bg-gradient-to-r from-lexicon-500 to-lexicon-accent bg-clip-text text-transparent">LEXICON</span>
-                    <span class="block text-xs font-semibold text-slate-500 dark:text-slate-400">Teachers Area & Quiz Portal</span>
+                    <span class="block text-xs font-semibold text-slate-500 dark:text-slate-400">English practice, made fun</span>
                 </div>
             </div>
 
             <!-- Header Controls -->
             <div class="flex items-center gap-3">
-                <!-- Current Role Tag -->
-                <div id="roleBadge" class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold bg-amber-100 dark:bg-amber-900/50 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-700">
-                    <i class="fa-solid fa-user-clock"></i>
-                    <span id="roleBadgeText">Guest Mode (5 Qs)</span>
-                </div>
-
-                <!-- Role Switcher Button -->
-                <button onclick="openRoleModal()" class="px-3.5 py-1.5 rounded-xl bg-lexicon-50 dark:bg-slate-800 text-lexicon-600 dark:text-lexicon-accent hover:bg-lexicon-100 dark:hover:bg-slate-700 font-semibold text-sm transition flex items-center gap-2 border border-lexicon-200 dark:border-slate-700 shadow-sm">
-                    <i class="fa-solid fa-user-gear"></i>
-                    <span class="hidden sm:inline">Switch Role</span>
-                </button>
-
+                <span id="roleBadge" class="hidden rounded-full bg-blue-50 px-3 py-1.5 text-xs font-bold text-blue-800 dark:bg-blue-950 dark:text-blue-200 sm:inline-flex">Student access</span>
+                <button id="switchRoleButton" type="button" onclick="openRoleModal()" class="rounded-xl border border-slate-200 px-3 py-2 text-xs font-bold text-slate-700 transition hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800">Switch access</button>
                 <!-- Dark Mode Toggle -->
-                <button onclick="toggleDarkMode()" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition">
+                <button aria-label="Switch theme" onclick="toggleDarkMode()" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition">
                     <i id="themeIcon" class="fa-solid fa-moon"></i>
                 </button>
             </div>
@@ -119,112 +114,57 @@
     </nav>
 
     <!-- Main Content Area -->
-    <main class="flex-grow container mx-auto px-4 py-8 max-w-5xl">
+    <main class="flex-grow container mx-auto px-4 py-8 max-w-6xl">
+
+        <div id="roleModal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/75 p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="accessTitle">
+            <form id="accessForm" class="w-full max-w-md rounded-3xl bg-white p-7 shadow-2xl dark:bg-slate-900 sm:p-9">
+                <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-100 text-2xl text-lexicon-600 dark:bg-blue-950 dark:text-sky-300"><i class="fa-solid fa-lock"></i></div>
+                <h1 id="accessTitle" class="mt-5 text-center text-2xl font-extrabold">Welcome to Lexicon</h1>
+                <p class="mt-2 text-center text-sm text-slate-500 dark:text-slate-400">Choose your access type and enter its password.</p>
+                <label class="mt-6 block text-sm font-bold">Access type<select id="accessRole" class="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 dark:border-slate-700 dark:bg-slate-800"><option value="student">Student</option><option value="teacher">Teacher</option></select></label>
+                <label class="mt-4 block text-sm font-bold">Password<input id="accessPassword" type="password" autocomplete="current-password" required class="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 dark:border-slate-700 dark:bg-slate-800" placeholder="Enter your password"></label>
+                <p id="accessError" class="mt-3 hidden text-sm font-semibold text-red-600" role="alert">That password does not match the selected access type.</p>
+                <p class="mt-3 text-xs leading-5 text-slate-500">Access is remembered only for this browser tab.</p>
+                <button type="submit" class="mt-5 w-full rounded-xl bg-gradient-to-r from-lexicon-600 to-sky-500 px-5 py-3 font-bold text-white shadow-lg">Continue <i class="fa-solid fa-arrow-right ml-1"></i></button>
+            </form>
+        </div>
         
-        <!-- ================= VIEW 1: ROLE SELECTION MODAL ================= -->
-        <div id="roleModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-sm transition-opacity duration-300">
-            <div class="bg-white dark:bg-slate-800 rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-200 dark:border-slate-700 relative overflow-hidden">
-                <!-- Header Accent -->
-                <div class="h-2 w-full bg-gradient-to-r from-lexicon-500 to-lexicon-accent absolute top-0 left-0"></div>
-
-                <div class="text-center mb-6 pt-2">
-                    <div class="w-16 h-16 bg-lexicon-50 dark:bg-slate-700 text-lexicon-500 dark:text-lexicon-accent rounded-2xl flex items-center justify-center mx-auto mb-3 text-2xl shadow-inner">
-                        <i class="fa-solid fa-graduation-cap"></i>
-                    </div>
-                    <h2 class="text-2xl font-bold text-slate-800 dark:text-white">Welcome to Lexicon Quiz Panel</h2>
-                    <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Select your access mode to continue</p>
-                </div>
-
-                <div class="space-y-4">
-                    <!-- Guest Button -->
-                    <button onclick="selectGuestRole()" class="w-full p-4 rounded-2xl border-2 border-slate-200 dark:border-slate-700 hover:border-lexicon-500 dark:hover:border-lexicon-accent bg-slate-50 dark:bg-slate-700/50 hover:bg-white dark:hover:bg-slate-700 transition group text-left flex items-start gap-4">
-                        <div class="w-12 h-12 rounded-xl bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 flex items-center justify-center text-xl shrink-0 group-hover:scale-110 transition">
-                            <i class="fa-solid fa-user"></i>
-                        </div>
-                        <div>
-                            <div class="font-bold text-slate-800 dark:text-white group-hover:text-lexicon-600 dark:group-hover:text-lexicon-accent transition">Continue as Guest / Student</div>
-                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Instant access limited to 5 practice questions per session.</p>
-                        </div>
-                    </button>
-
-                    <!-- Teacher Button -->
-                    <button onclick="showTeacherLogin()" class="w-full p-4 rounded-2xl border-2 border-lexicon-200 dark:border-lexicon-900/50 hover:border-lexicon-500 bg-lexicon-50/60 dark:bg-slate-700/80 hover:bg-lexicon-50 dark:hover:bg-slate-700 transition group text-left flex items-start gap-4">
-                        <div class="w-12 h-12 rounded-xl bg-lexicon-500 text-white flex items-center justify-center text-xl shrink-0 group-hover:scale-110 transition shadow-md shadow-lexicon-500/20">
-                            <i class="fa-solid fa-key"></i>
-                        </div>
-                        <div>
-                            <div class="font-bold text-lexicon-600 dark:text-lexicon-accent">Teacher Access (Passcode Required)</div>
-                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Unlimited 15 questions, customizable timer, full answer key & student scores.</p>
-                        </div>
-                    </button>
-                </div>
-
-                <!-- Teacher Login Sub-Form (Hidden by default) -->
-                <div id="teacherLoginForm" class="hidden mt-5 pt-5 border-t border-slate-200 dark:border-slate-700">
-                    <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-2 uppercase tracking-wider">
-                        Enter Teacher Security Passcode
-                    </label>
-                    <div class="flex gap-2">
-                        <input type="password" id="passcodeInput" placeholder="Your code." class="flex-grow px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 dark:bg-slate-900 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-lexicon-500 text-sm">
-                        <button onclick="verifyTeacherPasscode()" class="px-5 py-2.5 bg-lexicon-500 hover:bg-lexicon-600 text-white font-bold rounded-xl text-sm transition shadow-md">
-                            Verify
-                        </button>
-                    </div>
-                    <div id="passcodeError" class="hidden text-xs text-red-500 dark:text-red-400 mt-2 font-medium flex items-center gap-1">
-                        <i class="fa-solid fa-circle-exclamation"></i> Invalid passcode. Please try again.
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ================= VIEW 2: QUIZ DASHBOARD / CONFIG ================= -->
-        <div id="quizDashboard" class="glass-card rounded-3xl p-6 sm:p-10 shadow-xl border mb-8">
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-slate-200 dark:border-slate-700">
-                <div>
-                    <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-lexicon-50 dark:bg-slate-800 text-lexicon-600 dark:text-lexicon-accent border border-lexicon-200 dark:border-slate-700">
-                        Grammar Module
-                    </span>
-                    <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-800 dark:text-white mt-2">
-                        Present Simple vs. Present Continuous
-                    </h1>
-                    <p class="text-slate-600 dark:text-slate-400 text-sm mt-1">
-                        Practice time expressions, stative verbs, and verb forms with immediate audio feedback.
-                    </p>
-                </div>
-
-                <!-- Teacher Controls Panel -->
-                <div id="teacherSettings" class="bg-slate-50 dark:bg-slate-800/80 p-4 rounded-2xl border border-slate-200 dark:border-slate-700">
-                    <span class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-3 uppercase tracking-wider">
-                        <i class="fa-solid fa-sliders text-lexicon-500"></i> Settings & Configuration
-                    </span>
-                    <div class="grid grid-cols-2 gap-3 text-xs">
-                        <div>
-                            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Questions:</label>
-                            <select id="questionCountSelect" class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg p-1.5 font-medium">
-                                <option value="5">5 Questions</option>
-                                <option value="10">10 Questions</option>
-                                <option value="15" selected>15 Questions (Full)</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Timer / Question:</label>
-                            <select id="timerSelect" class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg p-1.5 font-medium">
-                                <option value="0">No Timer</option>
-                                <option value="15">15 Seconds</option>
-                                <option value="30" selected>30 Seconds</option>
-                            </select>
-                        </div>
+        <!-- Quiz Library -->
+        <section id="quizDashboard" class="space-y-8">
+            <div class="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-blue-950 via-blue-800 to-sky-500 p-7 text-white shadow-2xl sm:p-12">
+                <div class="absolute -right-12 -top-20 h-72 w-72 rounded-full border-[36px] border-white/10"></div>
+                <div class="absolute -bottom-28 right-40 h-64 w-64 rounded-full bg-cyan-300/20 blur-2xl"></div>
+                <div class="relative z-10 max-w-3xl">
+                    <span class="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-bold uppercase tracking-[.18em] ring-1 ring-white/25"><i class="fa-solid fa-sparkles"></i> Lexicon English Lab</span>
+                    <h1 class="mt-5 text-4xl font-black leading-tight sm:text-6xl">Practice a little.<br><span class="text-cyan-200">Improve a lot.</span></h1>
+                    <p class="mt-4 max-w-xl text-sm leading-6 text-blue-100 sm:text-base">Choose a topic, build your streak, and get instant explanations for every answer. Pick up where you left off whenever you like.</p>
+                    <div class="mt-7 flex flex-wrap gap-3 text-sm font-semibold">
+                        <span class="rounded-xl bg-white/10 px-4 py-2 ring-1 ring-white/20"><i class="fa-solid fa-layer-group mr-2 text-cyan-200"></i><span id="libraryCount">7</span> quiz topics</span>
+                        <span class="rounded-xl bg-white/10 px-4 py-2 ring-1 ring-white/20"><i class="fa-solid fa-circle-check mr-2 text-cyan-200"></i>Instant feedback</span>
+                        <span class="rounded-xl bg-white/10 px-4 py-2 ring-1 ring-white/20"><i class="fa-solid fa-mobile-screen mr-2 text-cyan-200"></i>Works on every device</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Start Button Box -->
-            <div class="pt-8 text-center">
-                <button onclick="startQuiz()" class="px-10 py-4 bg-gradient-to-r from-lexicon-500 to-lexicon-600 hover:from-lexicon-600 hover:to-lexicon-700 text-white font-extrabold text-lg rounded-2xl shadow-lg shadow-lexicon-500/30 hover:shadow-xl hover:scale-105 transition transform flex items-center gap-3 mx-auto">
-                    <i class="fa-solid fa-play"></i> Start Quiz Challenge
-                </button>
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+                <div><p class="text-xs font-bold uppercase tracking-[.2em] text-lexicon-500">Your practice library</p><h2 class="mt-1 text-2xl font-extrabold text-slate-900 dark:text-white sm:text-3xl">What would you like to practise?</h2></div>
+                <label class="relative block sm:w-72"><span class="sr-only">Search quizzes</span><i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i><input id="quizSearch" type="search" placeholder="Search topics..." class="w-full rounded-xl border border-slate-200 bg-white py-3 pl-11 pr-4 text-sm outline-none transition focus:border-lexicon-500 focus:ring-4 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-800 dark:focus:ring-blue-950"></label>
             </div>
-        </div>
+            <div id="quizGrid" class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3"></div>
+            <p id="noQuizzesMessage" class="hidden rounded-2xl border border-dashed border-slate-300 p-10 text-center text-slate-500 dark:border-slate-700">No quizzes match that search. Try another topic.</p>
+
+            <div class="glass-card rounded-3xl p-5 sm:p-7">
+                <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                    <div><h3 class="text-lg font-bold">Make it your challenge</h3><p class="text-sm text-slate-500 dark:text-slate-400">Choose a question count and timer before starting.</p></div>
+                    <div class="grid grid-cols-2 gap-3 sm:w-[340px]">
+                        <label class="text-xs font-semibold text-slate-600 dark:text-slate-300">Questions<select id="questionCountSelect" class="mt-1 w-full rounded-xl border border-slate-200 bg-white p-2.5 text-sm dark:border-slate-700 dark:bg-slate-900"><option value="5">5 questions</option><option value="10">10 questions</option><option value="15" selected>15 questions</option><option value="20">20 questions</option></select></label>
+                        <label class="text-xs font-semibold text-slate-600 dark:text-slate-300">Timer per question<select id="timerSelect" class="mt-1 w-full rounded-xl border border-slate-200 bg-white p-2.5 text-sm dark:border-slate-700 dark:bg-slate-900"><option value="0">No timer</option><option value="15">15 seconds</option><option value="30" selected>30 seconds</option><option value="60">60 seconds</option></select></label>
+                    </div>
+                </div>
+                <p id="selectedQuizSummary" class="mt-4 text-sm font-semibold text-lexicon-600 dark:text-lexicon-accent">Selected: Present Simple vs. Present Continuous</p>
+                <div class="mt-5 flex flex-wrap items-center gap-3"><button id="startQuizButton" onclick="startQuiz()" class="rounded-xl bg-gradient-to-r from-lexicon-500 to-sky-500 px-7 py-3.5 font-bold text-white shadow-lg shadow-blue-500/25 transition hover:-translate-y-0.5 hover:shadow-xl"><i class="fa-solid fa-play mr-2"></i>Start this quiz</button><p class="text-xs text-slate-500 dark:text-slate-400">Your score stays on this device</p></div>
+            </div>
+        </section>
 
         <!-- ================= VIEW 3: ACTIVE QUIZ INTERFACE ================= -->
         <div id="quizContainer" class="hidden glass-card rounded-3xl p-6 sm:p-10 shadow-xl border">
@@ -257,7 +197,7 @@
 
             <!-- Progress Bar -->
             <div class="w-full bg-slate-200 dark:bg-slate-700 h-2.5 rounded-full overflow-hidden mb-8">
-                <div id="progressBar" class="h-full bg-gradient-to-r from-lexicon-500 to-lexicon-accent transition-all duration-300 w-0"></div>
+                <div id="progressBar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" class="h-full bg-gradient-to-r from-lexicon-500 to-lexicon-accent transition-all duration-300 w-0"></div>
             </div>
 
             <!-- Question Card -->
@@ -276,7 +216,7 @@
             </div>
 
             <!-- Explanation & Feedback Box (Hidden until answer chosen) -->
-            <div id="feedbackBox" class="hidden p-5 rounded-2xl mb-6 transition-all border">
+            <div id="feedbackBox" role="status" aria-live="polite" class="hidden p-5 rounded-2xl mb-6 transition-all border">
                 <div class="flex items-start gap-3">
                     <div id="feedbackIcon" class="text-xl mt-0.5"></div>
                     <div>
@@ -305,14 +245,18 @@
                 <h2 class="text-3xl font-extrabold text-slate-800 dark:text-white">Quiz Completed!</h2>
                 <p class="text-slate-500 dark:text-slate-400 text-sm mt-1">Here is your performance summary for Lexicon English Grammar</p>
 
-                <div class="mt-6 flex justify-center items-center gap-6">
-                    <div class="bg-slate-50 dark:bg-slate-800 px-6 py-3 rounded-2xl border border-slate-200 dark:border-slate-700">
-                        <span class="text-xs text-slate-400 font-bold uppercase block">Final Score</span>
+                <div class="mt-6 flex flex-wrap justify-center gap-4 sm:gap-6">
+                    <div class="min-w-32 rounded-2xl border border-slate-200 bg-slate-50 px-6 py-3 dark:border-slate-700 dark:bg-slate-800">
+                        <span class="block text-xs font-bold uppercase text-slate-400">Correct answers</span>
                         <span id="finalScoreText" class="text-2xl font-black text-lexicon-500">0 / 0</span>
                     </div>
-                    <div class="bg-slate-50 dark:bg-slate-800 px-6 py-3 rounded-2xl border border-slate-200 dark:border-slate-700">
-                        <span class="text-xs text-slate-400 font-bold uppercase block">Accuracy</span>
+                    <div class="min-w-32 rounded-2xl border border-slate-200 bg-slate-50 px-6 py-3 dark:border-slate-700 dark:bg-slate-800">
+                        <span class="block text-xs font-bold uppercase text-slate-400">Accuracy</span>
                         <span id="accuracyText" class="text-2xl font-black text-emerald-500">0%</span>
+                    </div>
+                    <div class="min-w-32 rounded-2xl border border-slate-200 bg-slate-50 px-6 py-3 dark:border-slate-700 dark:bg-slate-800">
+                        <span class="block text-xs font-bold uppercase text-slate-400">Points earned</span>
+                        <span id="finalPointsText" class="text-2xl font-black text-amber-500">0</span>
                     </div>
                 </div>
             </div>
@@ -354,11 +298,11 @@
 
     <script>
         // ================= CONFIGURATION & QUESTION BANK =================
-        const TEACHER_PASSCODE = "LEXICON2026"; // Security Passcode
+        // All quiz topics are open to visitors; no role gate is required.
 
         const questionBank = [
             {
-                id: 1,
+                id: 1, category: "present",
                 question: "Listen! She ________ the piano in the music room.",
                 options: ["plays", "is playing", "play", "are playing"],
                 correct: 1,
@@ -366,7 +310,7 @@
                 explanation: "The command word 'Listen!' indicates an action taking place right now at the moment of speaking. Therefore, we use the Present Continuous ('is playing')."
             },
             {
-                id: 2,
+                id: 2, category: "present",
                 question: "My father usually ________ to work by car every morning.",
                 options: ["is going", "go", "goes", "has gone"],
                 correct: 2,
@@ -374,7 +318,7 @@
                 explanation: "Time markers like 'usually' and 'every morning' denote regular habits. For 3rd person singular ('My father' / 'he'), we add '-es' to the verb ('goes')."
             },
             {
-                id: 3,
+                id: 3, category: "present",
                 question: "Right now, the students ________ a grammar test.",
                 options: ["write", "are writing", "is writing", "writes"],
                 correct: 1,
@@ -382,7 +326,7 @@
                 explanation: "'Right now' specifies a temporary activity occurring currently. 'Students' is plural, requiring 'are writing'."
             },
             {
-                id: 4,
+                id: 4, category: "present",
                 question: "I ________ the answer to this difficult question.",
                 options: ["know", "am knowing", "knows", "are knowing"],
                 correct: 0,
@@ -390,7 +334,7 @@
                 explanation: "'Know' is a stative verb expressing a mental state. Stative verbs are generally NOT used in the continuous form, so we use Present Simple ('know')."
             },
             {
-                id: 5,
+                id: 5, category: "present",
                 question: "Water ________ at 100 degrees Celsius.",
                 options: ["is boiling", "boil", "boils", "are boiling"],
                 correct: 2,
@@ -398,7 +342,7 @@
                 explanation: "Scientific facts and general truths are always expressed in the Present Simple tense."
             },
             {
-                id: 6,
+                id: 6, category: "present",
                 question: "Why ________ you ________ your jacket? It isn't cold inside.",
                 options: ["do / wear", "are / wearing", "does / wear", "is / wearing"],
                 correct: 1,
@@ -406,7 +350,7 @@
                 explanation: "Asking about an ongoing state or temporary choice right now requires 'Are you wearing'."
             },
             {
-                id: 7,
+                id: 7, category: "present",
                 question: "Look at them! They ________ football in the garden.",
                 options: ["play", "plays", "are playing", "is playing"],
                 correct: 2,
@@ -414,7 +358,7 @@
                 explanation: "'Look at them!' draws attention to an immediate ongoing event, requiring Present Continuous with plural 'they' -> 'are playing'."
             },
             {
-                id: 8,
+                id: 8, category: "present",
                 question: "She ________ French and English fluently.",
                 options: ["is speaking", "speaks", "speak", "are speaking"],
                 correct: 1,
@@ -422,7 +366,7 @@
                 explanation: "Language abilities and permanent facts take the Present Simple tense ('speaks')."
             },
             {
-                id: 9,
+                id: 9, category: "present",
                 question: "Be quiet, please! The baby ________ right now.",
                 options: ["sleeps", "is sleeping", "sleep", "are sleeping"],
                 correct: 1,
@@ -430,7 +374,7 @@
                 explanation: "'Be quiet!' signals an event occurring at this instant ('is sleeping')."
             },
             {
-                id: 10,
+                id: 10, category: "present",
                 question: "I ________ ice cream, especially on hot summer days.",
                 options: ["am liking", "like", "likes", "is liking"],
                 correct: 1,
@@ -438,7 +382,7 @@
                 explanation: "Verbs of emotion like 'like', 'love', and 'hate' are stative and take the Present Simple form."
             },
             {
-                id: 11,
+                id: 11, category: "present",
                 question: "Tom ________ his homework at the moment.",
                 options: ["doesn't do", "isn't doing", "don't do", "aren't doing"],
                 correct: 1,
@@ -446,7 +390,7 @@
                 explanation: "'At the moment' indicates current progress. The negative form for 'Tom' is 'isn't doing'."
             },
             {
-                id: 12,
+                id: 12, category: "present",
                 question: "How often ________ you ________ to the cinema?",
                 options: ["are / going", "do / go", "does / go", "is / going"],
                 correct: 1,
@@ -454,7 +398,7 @@
                 explanation: "'How often' asks about frequency and routine habits, requiring auxiliary 'do' + base verb 'go'."
             },
             {
-                id: 13,
+                id: 13, category: "present",
                 question: "Look! The sun ________ behind the clouds.",
                 options: ["disappears", "is disappearing", "disappear", "are disappearing"],
                 correct: 1,
@@ -462,7 +406,7 @@
                 explanation: "Visual imperative 'Look!' calls attention to an action in progress ('is disappearing')."
             },
             {
-                id: 14,
+                id: 14, category: "present",
                 question: "My brother ________ TV every afternoon after school.",
                 options: ["watches", "is watching", "watch", "are watching"],
                 correct: 0,
@@ -470,17 +414,108 @@
                 explanation: "Verbs ending in -ch add '-es' in the 3rd person singular for regular habits ('watches')."
             },
             {
-                id: 15,
-                question: "We ________ our grandparents this weekend.",
-                options: ["visit", "are visiting", "visits", "visiting"],
-                correct: 1,
-                focus: "Present Continuous (Future Arrangements)",
-                explanation: "Present Continuous is frequently used to express fixed personal plans and arrangements in the near future."
-            }
+                id: 15, category: "present", question: "We ________ our grandparents this weekend.",
+                options: ["visit", "are visiting", "visits", "visiting"], correct: 1,
+                focus: "Present Continuous (Future Arrangements)", explanation: "Present Continuous is frequently used to express fixed personal plans and arrangements in the near future."
+            },
+            { id: 16, category: "present", question: "Maya ________ coffee every morning before work.", options: ["drink", "is drinking", "drinks", "drinking"], correct: 2, focus: "Present Simple (Daily routine)", explanation: "A daily routine uses the Present Simple. With 'Maya' (she), add -s: drinks." },
+            { id: 17, category: "present", question: "They ________ for the bus at the moment.", options: ["wait", "are waiting", "waits", "is waiting"], correct: 1, focus: "Present Continuous (Happening now)", explanation: "'At the moment' describes an action in progress. With 'they', use are + verb-ing." },
+            { id: 18, category: "present", question: "______ your brother play the guitar?", options: ["Do", "Is", "Does", "Are"], correct: 2, focus: "Present Simple (Questions)", explanation: "For a Present Simple question with he/she/it, use Does + subject + base verb." },
+            { id: 19, category: "present", question: "I ________ my keys. Have you seen them?", options: ["am looking for", "look for", "looks for", "is looking for"], correct: 0, focus: "Present Continuous (Temporary action)", explanation: "The speaker is searching now, so use am + looking." },
+            { id: 20, category: "present", question: "The train ________ at 8:15 every weekday.", options: ["is leaving", "leave", "leaves", "leaving"], correct: 2, focus: "Present Simple (Timetables)", explanation: "Fixed schedules and timetables use the Present Simple." },
+            { id: 21, category: "past", question: "We ________ a great film last night.", options: ["watch", "watched", "were watch", "have watch"], correct: 1, focus: "Past Simple (Regular verbs)", explanation: "'Last night' is a finished past time. Add -ed to the regular verb: watched." },
+            { id: 22, category: "past", question: "She ________ her wallet on the bus yesterday.", options: ["loses", "was losing", "lost", "has lose"], correct: 2, focus: "Past Simple (Irregular verbs)", explanation: "The past form of 'lose' is the irregular verb 'lost'." },
+            { id: 23, category: "past", question: "______ you ________ the match on TV?", options: ["Did / see", "Were / saw", "Do / saw", "Did / saw"], correct: 0, focus: "Past Simple (Questions)", explanation: "Use Did + subject + base form. The main verb stays 'see', not 'saw'." },
+            { id: 24, category: "past", question: "At 9 pm, I ________ dinner while my sister studied.", options: ["cooked", "was cooking", "am cooking", "have cooked"], correct: 1, focus: "Past Continuous (Action in progress)", explanation: "The action was in progress at a specific past time, so use was + cooking." },
+            { id: 25, category: "past", question: "They ________ home when it started to rain.", options: ["walked", "were walking", "are walking", "have walked"], correct: 1, focus: "Past Continuous (Interrupted action)", explanation: "A longer action in progress (were walking) is interrupted by a shorter Past Simple action." },
+            { id: 26, category: "past", question: "I ________ my homework before I went out.", options: ["finish", "have finished", "had finished", "was finish"], correct: 2, focus: "Past Perfect (Earlier past action)", explanation: "The homework was completed before another past event. Use had + past participle." },
+            { id: 27, category: "future", question: "Look at those dark clouds! It ________ rain.", options: ["will", "is going to", "does", "was"], correct: 1, focus: "Going to (Prediction from evidence)", explanation: "Visible evidence (dark clouds) supports a prediction with be going to." },
+            { id: 28, category: "future", question: "I think people ________ live on Mars one day.", options: ["are", "will", "did", "have"], correct: 1, focus: "Will (Prediction / opinion)", explanation: "Use will for a future prediction based on an opinion." },
+            { id: 29, category: "future", question: "This time tomorrow, we ________ to Athens.", options: ["will be travelling", "travelled", "are travel", "will travelled"], correct: 0, focus: "Future Continuous", explanation: "An action in progress at a particular future time uses will be + verb-ing." },
+            { id: 30, category: "future", question: "The lesson ________ at 10:00 according to the schedule.", options: ["is starting", "starts", "will started", "start"], correct: 1, focus: "Present Simple (Timetabled future)", explanation: "We often use Present Simple for fixed schedules and timetables." },
+            { id: 31, category: "modal", question: "You ________ wear a seat belt in a car. It's the law.", options: ["might", "must", "could", "would"], correct: 1, focus: "Must (Obligation)", explanation: "Must expresses a strong obligation, especially a rule or law." },
+            { id: 32, category: "modal", question: "______ you help me carry this box, please?", options: ["Must", "Should", "Could", "Might"], correct: 2, focus: "Could (Polite request)", explanation: "Could you…? is a polite way to ask someone to do something." },
+            { id: 33, category: "modal", question: "You ________ see a doctor if you feel worse.", options: ["should", "can to", "must to", "would to"], correct: 0, focus: "Should (Advice)", explanation: "Should + base verb is used to give advice." },
+            { id: 34, category: "modal", question: "When I was five, I ________ swim very well.", options: ["can", "could", "must", "should"], correct: 1, focus: "Could (Past ability)", explanation: "Could describes general ability in the past." },
+            { id: 35, category: "modal", question: "You ________ park here; this space is for ambulances.", options: ["mustn't", "don't have", "couldn't to", "shouldn't to"], correct: 0, focus: "Mustn't (Prohibition)", explanation: "Mustn't means something is forbidden. Don't have to would mean it is optional." },
+            { id: 36, category: "article", question: "She adopted ________ small cat from the shelter.", options: ["a", "an", "the", "—"], correct: 0, focus: "Articles (A / An)", explanation: "Use 'a' before a singular countable noun beginning with a consonant sound." },
+            { id: 37, category: "article", question: "We waited for ________ hour outside the museum.", options: ["a", "an", "the", "—"], correct: 1, focus: "Articles (Sound, not spelling)", explanation: "'Hour' begins with a vowel sound because h is silent, so use 'an'." },
+            { id: 38, category: "article", question: "Mount Everest is in ________ Himalayas.", options: ["a", "an", "the", "—"], correct: 2, focus: "Articles (Geographical names)", explanation: "Use 'the' with mountain ranges such as the Himalayas." },
+            { id: 39, category: "article", question: "The keys are ________ the table.", options: ["in", "at", "on", "to"], correct: 2, focus: "Prepositions of place", explanation: "Use 'on' when something rests on the surface of another thing." },
+            { id: 40, category: "article", question: "Our English class is ________ Monday morning.", options: ["in", "on", "at", "by"], correct: 1, focus: "Prepositions of time", explanation: "Use 'on' with days and specific days of the week." },
+            { id: 41, category: "vocab", question: "If a task is 'easy', it is ________.", options: ["difficult", "simple", "dangerous", "expensive"], correct: 1, focus: "Vocabulary (Synonyms)", explanation: "'Simple' is a synonym of 'easy'." },
+            { id: 42, category: "vocab", question: "Choose the opposite of 'generous'.", options: ["kind", "selfish", "helpful", "polite"], correct: 1, focus: "Vocabulary (Antonyms)", explanation: "A generous person gives freely; a selfish person is the opposite." },
+            { id: 43, category: "vocab", question: "You need an umbrella because it is ________.", options: ["sunny", "windy", "raining", "dry"], correct: 2, focus: "Vocabulary (Weather)", explanation: "An umbrella protects you from rain." },
+            { id: 44, category: "vocab", question: "A person who designs buildings is an ________.", options: ["architect", "electrician", "author", "athlete"], correct: 0, focus: "Vocabulary (Jobs)", explanation: "An architect plans and designs buildings." },
+            { id: 45, category: "vocab", question: "The meeting was postponed. It will happen ________.", options: ["earlier than planned", "at a later time", "right now", "every day"], correct: 1, focus: "Vocabulary (Meaning in context)", explanation: "'Postponed' means moved to a later time or date." },
+            { id: 48, category: "past", question: "We ________ our cousins at the station last Saturday.", options: ["meet", "met", "were meet", "have met"], correct: 1, focus: "Past Simple (Irregular verbs)", explanation: "'Last Saturday' is a finished past time. The past form of 'meet' is 'met'." },
+            { id: 49, category: "past", question: "While I ________ a book, the lights went out.", options: ["read", "was reading", "am reading", "have read"], correct: 1, focus: "Past Continuous (Interrupted action)", explanation: "The reading was in progress when the shorter action happened: was reading." },
+            { id: 50, category: "past", question: "He ________ to school yesterday because he was ill.", options: ["didn't go", "didn't went", "wasn't go", "doesn't went"], correct: 0, focus: "Past Simple (Negative)", explanation: "Use did not + the base form: didn't go." },
+            { id: 51, category: "past", question: "By the time we arrived, the film ________.", options: ["already started", "has already started", "had already started", "was already start"], correct: 2, focus: "Past Perfect (Earlier past action)", explanation: "The film started before we arrived. Use had + past participle for the earlier event." },
+            { id: 52, category: "past", question: "When ________ you ________ your best friend?", options: ["did / meet", "were / met", "have / meet", "did / met"], correct: 0, focus: "Past Simple (Questions)", explanation: "Form Past Simple questions with did + subject + base verb: did you meet." },
+            { id: 53, category: "past", question: "My grandparents ________ in this village for forty years before they moved.", options: ["live", "have lived", "had lived", "were live"], correct: 2, focus: "Past Perfect (Duration before a past event)", explanation: "Their time living there ended before another past event. Use had lived." },
+            { id: 54, category: "past", question: "It ________ heavily when we left the cinema.", options: ["rained", "was raining", "is raining", "has rain"], correct: 1, focus: "Past Continuous (Background action)", explanation: "The rain was in progress at the time we left, so use was raining." },
+            { id: 55, category: "past", question: "I ________ my first bicycle when I was eight.", options: ["get", "got", "was get", "have got"], correct: 1, focus: "Past Simple (Completed event)", explanation: "'When I was eight' refers to a finished period in the past. The past form of get is got." },
+            { id: 56, category: "past", question: "They ________ dinner before the guests arrived.", options: ["prepared", "had prepared", "were prepare", "have prepare"], correct: 1, focus: "Past Perfect (Sequence of events)", explanation: "Dinner was ready before the guests arrived, so use had prepared." },
+            { id: 57, category: "past", question: "She ________ TV at 7 pm last night; she was doing homework.", options: ["didn't watch", "wasn't watching", "isn't watching", "hadn't watched"], correct: 1, focus: "Past Continuous (Negative in progress)", explanation: "The sentence describes what was not in progress at a particular past time: wasn't watching." },
+            { id: 58, category: "future", question: "I promise I ________ you with your project.", options: ["help", "am helping", "will help", "helped"], correct: 2, focus: "Will (Promise)", explanation: "Use will for a promise made at the moment of speaking." },
+            { id: 59, category: "future", question: "We ________ the dentist at 4 pm tomorrow. The appointment is booked.", options: ["see", "are seeing", "will saw", "saw"], correct: 1, focus: "Present Continuous (Fixed arrangement)", explanation: "A booked personal appointment is a fixed future arrangement: are seeing." },
+            { id: 60, category: "future", question: "Don't worry. I ________ carry that bag for you.", options: ["will", "am going", "did", "would have"], correct: 0, focus: "Will (Offer)", explanation: "Use will for an offer made at the moment of speaking." },
+            { id: 61, category: "future", question: "What ________ you ________ do after you finish school?", options: ["are / going to", "will / going to", "do / will", "did / going to"], correct: 0, focus: "Going to (Intention)", explanation: "Use am/is/are going to + base verb for an intention or plan." },
+            { id: 62, category: "future", question: "The phone is ringing. I ________ answer it.", options: ["am going to", "will", "was", "have"], correct: 1, focus: "Will (Spontaneous decision)", explanation: "The speaker decides at the moment of speaking, so use will." },
+            { id: 63, category: "future", question: "By this time next week, we ________ our exams.", options: ["finish", "will have finished", "are finishing", "finished"], correct: 1, focus: "Future Perfect", explanation: "Use will have + past participle for an action completed before a future point." },
+            { id: 64, category: "future", question: "The bus ________ at 6:30, so let's leave now.", options: ["is leaving", "leaves", "will left", "leave"], correct: 1, focus: "Present Simple (Timetable)", explanation: "Public transport timetables are normally described with the Present Simple." },
+            { id: 65, category: "future", question: "I ________ visit my aunt this summer; we have already planned it.", options: ["am going to", "will have", "did", "was"], correct: 0, focus: "Going to (Prior plan)", explanation: "A plan made before speaking is expressed with be going to." },
+            { id: 66, category: "future", question: "At 10 tomorrow morning, the students ________ their English test.", options: ["will be taking", "take yesterday", "are take", "will took"], correct: 0, focus: "Future Continuous (In progress at a future time)", explanation: "Use will be + verb-ing for an action that will be in progress at a future time." },
+            { id: 67, category: "future", question: "I think our team ________ the final. They are playing very well.", options: ["wins", "is going win", "will win", "won"], correct: 2, focus: "Will (Prediction)", explanation: "Use will + base verb for a prediction or opinion about the future." },
+            { id: 68, category: "future", question: "Look out! You ________ drop those books!", options: ["are going to", "will have", "were", "did"], correct: 0, focus: "Going to (Immediate evidence)", explanation: "The speaker sees evidence that the event is about to happen, so use are going to." },
+            { id: 69, category: "modal", question: "______ I borrow your pen for a moment?", options: ["May", "Must", "Should", "Would have"], correct: 0, focus: "May (Permission)", explanation: "May I…? is a polite way to ask for permission." },
+            { id: 70, category: "modal", question: "You ________ bring any food; there will be plenty at the party.", options: ["mustn't", "don't have to", "shouldn't to", "couldn't"], correct: 1, focus: "Don't have to (No obligation)", explanation: "Don't have to means it is not necessary. Mustn't would mean it is forbidden." },
+            { id: 71, category: "modal", question: "Drivers ________ stop when the traffic light is red.", options: ["might", "have to", "could", "would"], correct: 1, focus: "Have to (Rule / necessity)", explanation: "Have to expresses an external rule or requirement." },
+            { id: 72, category: "modal", question: "It ________ rain later, so take an umbrella just in case.", options: ["might", "mustn't", "has to", "couldn't"], correct: 0, focus: "Might (Possibility)", explanation: "Might expresses a possibility, not a certainty." },
+            { id: 73, category: "modal", question: "You ________ talk during the exam. It is not allowed.", options: ["don't have to", "mustn't", "could", "might"], correct: 1, focus: "Mustn't (Prohibition)", explanation: "Mustn't means an action is prohibited." },
+            { id: 74, category: "modal", question: "______ we go for a walk after lunch?", options: ["Shall", "Must", "May to", "Have"], correct: 0, focus: "Shall (Suggestion)", explanation: "Shall we…? is a common way to make a suggestion." },
+            { id: 75, category: "modal", question: "My little brother ________ already read when he was four.", options: ["could", "should", "must", "might to"], correct: 0, focus: "Could (Past ability)", explanation: "Could describes an ability someone had in the past." },
+            { id: 76, category: "modal", question: "You ________ told me earlier; now it is too late.", options: ["should have", "must have", "could", "will"], correct: 0, focus: "Should have (Past criticism / regret)", explanation: "Should have + past participle describes a past action that was advisable but did not happen." },
+            { id: 77, category: "modal", question: "That ________ be Elena at the door; she said she was coming now.", options: ["must", "can't", "shouldn't", "has to"], correct: 0, focus: "Must (Strong deduction)", explanation: "Must expresses a strong logical conclusion based on the evidence." },
+            { id: 78, category: "modal", question: "You ________ see the sea from this window on a clear day.", options: ["can", "must", "should", "have to"], correct: 0, focus: "Can (Possibility / ability)", explanation: "Can describes what is possible or achievable in these conditions." },
+            { id: 79, category: "article", question: "My sister is studying to become ________ engineer.", options: ["a", "an", "the", "—"], correct: 1, focus: "Articles (A / An)", explanation: "Engineer begins with a vowel sound, so use 'an'." },
+            { id: 80, category: "article", question: "Could you close ________ door, please?", options: ["a", "an", "the", "—"], correct: 2, focus: "Articles (Specific noun)", explanation: "The speaker means a particular door that both people can identify, so use 'the'." },
+            { id: 81, category: "article", question: "My birthday is ________ July.", options: ["at", "on", "in", "by"], correct: 2, focus: "Prepositions of time (Months)", explanation: "Use 'in' with months and years." },
+            { id: 82, category: "article", question: "The shop opens ________ 9 o'clock.", options: ["at", "in", "on", "from"], correct: 0, focus: "Prepositions of time (Clock times)", explanation: "Use 'at' with a specific clock time." },
+            { id: 83, category: "article", question: "The children are playing ________ the garden.", options: ["on", "in", "at", "to"], correct: 1, focus: "Prepositions of place", explanation: "Use 'in' for an area or enclosed space such as a garden." },
+            { id: 84, category: "article", question: "There are ________ apples in the bowl.", options: ["much", "a little", "a few", "any of"], correct: 2, focus: "Quantifiers (Countable nouns)", explanation: "Apples are countable plural nouns. 'A few' means some, but not many." },
+            { id: 85, category: "article", question: "We have ________ time before the train leaves, so hurry up.", options: ["a few", "many", "little", "several"], correct: 2, focus: "Quantifiers (Uncountable nouns)", explanation: "Time is uncountable. 'Little time' means not much time." },
+            { id: 86, category: "article", question: "He has lived here ________ 2021.", options: ["for", "since", "during", "from"], correct: 1, focus: "Prepositions (Since / For)", explanation: "Use 'since' with the starting point of a period; use 'for' with its duration." },
+            { id: 97, category: "article", question: "We arrived ________ the airport two hours early.", options: ["in", "at", "on", "to"], correct: 1, focus: "Prepositions of place", explanation: "Use 'at' for a specific point or location such as an airport, station, or entrance." },
+            { id: 98, category: "article", question: "There aren't ________ chairs for everyone.", options: ["enough", "too", "much", "a little"], correct: 0, focus: "Quantifiers (Enough)", explanation: "'Enough chairs' means the available number meets the need. Chairs are countable plural nouns." },
+            { id: 87, category: "vocab", question: "After walking all day, we were ________ and wanted to sit down.", options: ["exhausted", "delighted", "curious", "relaxed"], correct: 0, focus: "Vocabulary (Feelings)", explanation: "Exhausted means extremely tired, which fits the context." },
+            { id: 88, category: "vocab", question: "The instructions were unclear, so I asked the teacher to ________ them.", options: ["explain", "borrow", "arrive", "invite"], correct: 0, focus: "Vocabulary (Meaning in context)", explanation: "To explain something is to make its meaning clear." },
+            { id: 89, category: "vocab", question: "A place where you can borrow books is a ________.", options: ["bakery", "library", "factory", "pharmacy"], correct: 1, focus: "Vocabulary (Places)", explanation: "A library lends books to its members." },
+            { id: 90, category: "vocab", question: "Choose the closest meaning to 'tiny'.", options: ["huge", "very small", "very loud", "quite old"], correct: 1, focus: "Vocabulary (Synonyms)", explanation: "Tiny means very small." },
+            { id: 91, category: "vocab", question: "The opposite of 'ancient' is ________.", options: ["modern", "historic", "old", "traditional"], correct: 0, focus: "Vocabulary (Antonyms)", explanation: "Modern means relating to the present or recent times; it is the opposite of ancient." },
+            { id: 92, category: "vocab", question: "Please speak ________; I can't hear you at the back.", options: ["more loudly", "more carefully", "more quietly", "more politely"], correct: 0, focus: "Vocabulary (Adverbs)", explanation: "The listener cannot hear, so the request is to speak more loudly." },
+            { id: 93, category: "vocab", question: "If you 'avoid' something, you try to ________ it.", options: ["stay away from", "look after", "take part in", "find out about"], correct: 0, focus: "Vocabulary (Phrasal meaning)", explanation: "Avoid means to stay away from or prevent contact with something." },
+            { id: 94, category: "vocab", question: "The instructions say to ________ the form in blue ink.", options: ["fill in", "look up", "turn off", "give away"], correct: 0, focus: "Vocabulary (Phrasal verbs)", explanation: "To fill in a form means to write the required information on it." },
+            { id: 95, category: "vocab", question: "A 'reliable' friend is someone you can ________.", options: ["depend on", "argue with", "laugh at", "wait for"], correct: 0, focus: "Vocabulary (Meaning in context)", explanation: "Reliable describes someone trustworthy whom you can depend on." },
+            { id: 96, category: "vocab", question: "The hotel was so ________ that we had to book a room months ahead.", options: ["popular", "empty", "silent", "ordinary"], correct: 0, focus: "Vocabulary (Meaning in context)", explanation: "A popular hotel is in high demand, which explains why it needs to be booked early." }
+        ];
+
+        const ACCESS_PASSWORDS = { teacher: 'LEX029', student: 'LEX26!' };
+
+        const quizCatalog = [
+            { id: 'present', title: 'Present Tenses', subtitle: 'Simple & Continuous', description: 'Habits, actions happening now, stative verbs and future arrangements.', icon: 'fa-arrows-rotate', tone: 'from-blue-500 to-cyan-400', level: 'A2–B1', featured: true },
+            { id: 'past', title: 'Past Tenses', subtitle: 'Simple, Continuous & Perfect', description: 'Tell stories and describe what happened, was happening, and had happened.', icon: 'fa-clock-rotate-left', tone: 'from-violet-500 to-fuchsia-400', level: 'A2–B1' },
+            { id: 'future', title: 'Future Forms', subtitle: 'Plans, predictions & more', description: 'Practise will, going to, timetables and actions in progress in the future.', icon: 'fa-rocket', tone: 'from-orange-500 to-amber-300', level: 'A2–B1' },
+            { id: 'modal', title: 'Modal Verbs', subtitle: 'Can, should, must & could', description: 'Use modal verbs for ability, advice, permission, requests and rules.', icon: 'fa-wand-magic-sparkles', tone: 'from-emerald-500 to-teal-300', level: 'A2–B1' },
+            { id: 'article', title: 'Articles & Prepositions', subtitle: 'A, an, the, in, on, at', description: 'Build confidence with articles and everyday prepositions of time and place.', icon: 'fa-location-dot', tone: 'from-pink-500 to-rose-300', level: 'A1–A2' },
+            { id: 'vocab', title: 'Everyday Vocabulary', subtitle: 'Words in context', description: 'Grow your vocabulary with synonyms, opposites, jobs, weather and meaning.', icon: 'fa-book-open', tone: 'from-indigo-500 to-blue-300', level: 'A2' },
+            { id: 'mixed', title: 'Mixed Grammar Mix', subtitle: 'A bit of everything', description: 'A shuffled challenge covering every topic in the practice library.', icon: 'fa-shuffle', tone: 'from-slate-700 to-slate-400', level: 'A1–B1' }
         ];
 
         // ================= STATE MANAGEMENT =================
-        let userRole = 'guest'; // 'guest' or 'teacher'
+        let selectedQuizId = 'present';
+        let userRole = 'student';
         let currentQuestions = [];
         let currentQuestionIndex = 0;
         let score = 0;
@@ -530,76 +565,134 @@
 
         // ================= DOM INITIALIZATION =================
         window.addEventListener('DOMContentLoaded', () => {
-            // Default load role modal
-            openRoleModal();
+            let savedTheme = null;
+            try { savedTheme = localStorage.getItem('lexicon-theme'); } catch {} 
+            document.documentElement.classList.toggle('dark', savedTheme ? savedTheme === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches);
+            syncThemeButton();
+            renderQuizLibrary();
+            document.getElementById('quizSearch').addEventListener('input', renderQuizLibrary);
+            document.getElementById('accessForm').addEventListener('submit', handleAccessSubmit);
+            const savedRole = sessionStorage.getItem('lexicon-access-role');
+            if (savedRole === 'teacher' || savedRole === 'student') {
+                userRole = savedRole;
+                updateAccessUI();
+                document.getElementById('roleModal').classList.add('hidden');
+            } else {
+                document.getElementById('accessPassword').focus();
+            }
+            document.addEventListener('keydown', event => {
+                if (event.altKey || event.ctrlKey || event.metaKey) return;
+                if (event.key >= '1' && event.key <= '4' && !document.getElementById('quizContainer').classList.contains('hidden')) {
+                    const option = document.querySelectorAll('#optionsContainer button')[Number(event.key) - 1];
+                    if (option && !option.disabled) option.click();
+                }
+            });
         });
 
+        function handleAccessSubmit(event) {
+            event.preventDefault();
+            const requestedRole = document.getElementById('accessRole').value;
+            const password = document.getElementById('accessPassword').value;
+            if (password !== ACCESS_PASSWORDS[requestedRole]) {
+                document.getElementById('accessError').classList.remove('hidden');
+                document.getElementById('accessPassword').select();
+                return;
+            }
+            userRole = requestedRole;
+            sessionStorage.setItem('lexicon-access-role', userRole);
+            document.getElementById('accessError').classList.add('hidden');
+            document.getElementById('accessPassword').value = '';
+            document.getElementById('roleModal').classList.add('hidden');
+            updateAccessUI();
+        }
+
+        function openRoleModal() {
+            sessionStorage.removeItem('lexicon-access-role');
+            document.getElementById('roleModal').classList.remove('hidden');
+            document.getElementById('accessError').classList.add('hidden');
+            document.getElementById('accessPassword').value = '';
+            document.getElementById('accessPassword').focus();
+        }
+
+        function updateAccessUI() {
+            const isTeacher = userRole === 'teacher';
+            document.getElementById('roleBadge').textContent = isTeacher ? 'Teacher access' : 'Student access';
+            document.getElementById('roleBadge').className = isTeacher
+                ? 'hidden rounded-full bg-emerald-100 px-3 py-1.5 text-xs font-bold text-emerald-800 dark:bg-emerald-950 dark:text-emerald-200 sm:inline-flex'
+                : 'hidden rounded-full bg-blue-50 px-3 py-1.5 text-xs font-bold text-blue-800 dark:bg-blue-950 dark:text-blue-200 sm:inline-flex';
+            document.getElementById('questionCountSelect').value = isTeacher ? '15' : '5';
+            document.getElementById('questionCountSelect').disabled = !isTeacher;
+            document.getElementById('questionCountSelect').classList.toggle('opacity-60', !isTeacher);
+            document.getElementById('questionCountSelect').classList.toggle('cursor-not-allowed', !isTeacher);
+        }
+
+        function syncThemeButton() {
+            const dark = document.documentElement.classList.contains('dark');
+            const icon = document.getElementById('themeIcon');
+            icon.className = dark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+            icon.closest('button').setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme');
+        }
+
+        function renderQuizLibrary() {
+            const query = document.getElementById('quizSearch').value.trim().toLowerCase();
+            const grid = document.getElementById('quizGrid');
+            const visibleQuizzes = quizCatalog.filter(quiz => `${quiz.title} ${quiz.subtitle} ${quiz.description} ${quiz.level}`.toLowerCase().includes(query));
+            grid.replaceChildren();
+            document.getElementById('noQuizzesMessage').classList.toggle('hidden', visibleQuizzes.length > 0);
+            visibleQuizzes.forEach(quiz => {
+                const count = quiz.id === 'mixed' ? questionBank.length : questionBank.filter(question => question.category === quiz.id).length;
+                const card = document.createElement('button');
+                card.type = 'button';
+                card.className = `group relative overflow-hidden rounded-3xl border p-5 text-left transition duration-200 hover:-translate-y-1 hover:shadow-xl ${selectedQuizId === quiz.id ? 'border-lexicon-500 bg-blue-50/70 shadow-lg shadow-blue-500/10 ring-2 ring-blue-200 dark:border-sky-400 dark:bg-slate-800 dark:ring-blue-900' : 'border-slate-200 bg-white hover:border-blue-200 dark:border-slate-800 dark:bg-slate-900/70 dark:hover:border-slate-700'}`;
+                card.setAttribute('aria-pressed', String(selectedQuizId === quiz.id));
+                card.addEventListener('click', () => selectQuiz(quiz.id));
+                const top = document.createElement('div'); top.className = 'flex items-start justify-between';
+                const icon = document.createElement('span'); icon.className = `flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br ${quiz.tone} text-lg text-white shadow-md`;
+                const iconGlyph = document.createElement('i'); iconGlyph.className = `fa-solid ${quiz.icon}`; iconGlyph.setAttribute('aria-hidden', 'true'); icon.append(iconGlyph);
+                const level = document.createElement('span'); level.className = 'rounded-full bg-slate-100 px-2.5 py-1 text-[10px] font-bold tracking-wide text-slate-500 dark:bg-slate-800 dark:text-slate-300'; level.textContent = quiz.level;
+                top.append(icon, level);
+                const title = document.createElement('h3'); title.className = 'mt-4 text-lg font-extrabold text-slate-900 dark:text-white'; title.textContent = quiz.title;
+                const subtitle = document.createElement('p'); subtitle.className = 'text-xs font-semibold text-lexicon-600 dark:text-sky-300'; subtitle.textContent = quiz.subtitle;
+                const description = document.createElement('p'); description.className = 'mt-3 min-h-[3rem] text-sm leading-6 text-slate-500 dark:text-slate-400'; description.textContent = quiz.description;
+                const footer = document.createElement('div'); footer.className = 'mt-4 flex items-center justify-between border-t border-slate-100 pt-3 text-xs font-semibold text-slate-500 dark:border-slate-800 dark:text-slate-400';
+                const questions = document.createElement('span');
+                const listIcon = document.createElement('i'); listIcon.className = 'fa-solid fa-list-ol mr-1.5 text-lexicon-500'; listIcon.setAttribute('aria-hidden', 'true');
+                questions.append(listIcon, document.createTextNode(`${count} questions`));
+                const action = document.createElement('span'); action.className = 'text-lexicon-600 transition group-hover:translate-x-1 dark:text-sky-300'; action.textContent = selectedQuizId === quiz.id ? 'Selected ✓' : 'Choose →';
+                footer.append(questions, action); card.append(top, title, subtitle, description, footer); grid.append(card);
+            });
+        }
+
+        function selectQuiz(quizId) {
+            selectedQuizId = quizId;
+            const quiz = quizCatalog.find(item => item.id === quizId);
+            document.getElementById('selectedQuizSummary').textContent = `Selected: ${quiz.title} — ${quiz.subtitle}`;
+            document.getElementById('questionCountSelect').value = userRole === 'teacher' ? '15' : '5';
+            renderQuizLibrary();
+        }
+
+        // No access modal: all quizzes are open to visitors.
         function toggleDarkMode() {
             document.documentElement.classList.toggle('dark');
-            const themeIcon = document.getElementById('themeIcon');
-            if (document.documentElement.classList.contains('dark')) {
-                themeIcon.className = 'fa-solid fa-sun';
-            } else {
-                themeIcon.className = 'fa-solid fa-moon';
-            }
+            try { localStorage.setItem('lexicon-theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light'); } catch {} 
+            syncThemeButton();
         }
-
-        // ================= ROLE SELECTION LOGIC =================
-        function openRoleModal() {
-            document.getElementById('roleModal').classList.remove('hidden');
-            document.getElementById('teacherLoginForm').classList.add('hidden');
-            document.getElementById('passcodeError').classList.add('hidden');
-            document.getElementById('passcodeInput').value = '';
-        }
-
-        function selectGuestRole() {
-            userRole = 'guest';
-            document.getElementById('roleModal').classList.add('hidden');
-            updateRoleUI();
-        }
-
-        function showTeacherLogin() {
-            document.getElementById('teacherLoginForm').classList.remove('hidden');
-            document.getElementById('passcodeInput').focus();
-        }
-
-        function verifyTeacherPasscode() {
-            const input = document.getElementById('passcodeInput').value.trim();
-            if (input === TEACHER_PASSCODE) {
-                userRole = 'teacher';
-                document.getElementById('roleModal').classList.add('hidden');
-                updateRoleUI();
-            } else {
-                document.getElementById('passcodeError').classList.remove('hidden');
-            }
-        }
-
-        function updateRoleUI() {
-            const roleBadgeText = document.getElementById('roleBadgeText');
-            const roleBadge = document.getElementById('roleBadge');
-            const teacherSettings = document.getElementById('teacherSettings');
-
-            if (userRole === 'teacher') {
-                roleBadgeText.innerText = "Teacher Mode (Full Access)";
-                roleBadge.className = "hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold bg-emerald-100 dark:bg-emerald-900/50 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700";
-                teacherSettings.classList.remove('opacity-50', 'pointer-events-none');
-            } else {
-                roleBadgeText.innerText = "Guest Mode (5 Questions Max)";
-                roleBadge.className = "hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold bg-amber-100 dark:bg-amber-900/50 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-700";
-                // Lock settings for guests
-                document.getElementById('questionCountSelect').value = "5";
-                teacherSettings.classList.add('opacity-50', 'pointer-events-none');
-            }
-        }
-
         // ================= QUIZ ENGINE =================
         function startQuiz() {
-            // Prepare question set based on role and settings
-            let desiredCount = parseInt(document.getElementById('questionCountSelect').value);
-            if (userRole === 'guest') desiredCount = 5;
+            if (!sessionStorage.getItem('lexicon-access-role')) {
+                document.getElementById('roleModal').classList.remove('hidden');
+                return;
+            }
+            const selectedPool = selectedQuizId === 'mixed' ? questionBank : questionBank.filter(question => question.category === selectedQuizId);
+            const requestedCount = userRole === 'teacher' ? Number(document.getElementById('questionCountSelect').value) : 5;
+            const desiredCount = Math.min(requestedCount, selectedPool.length);
 
             // Shuffle questions
-            const shuffled = [...questionBank].sort(() => 0.5 - Math.random());
+            const shuffled = [...selectedPool];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
             currentQuestions = shuffled.slice(0, desiredCount);
 
             // Timer configuration
@@ -615,7 +708,7 @@
             document.getElementById('quizDashboard').classList.add('hidden');
             document.getElementById('resultsContainer').classList.add('hidden');
             document.getElementById('quizContainer').classList.remove('hidden');
-
+    
             renderQuestion();
         }
 
@@ -625,7 +718,7 @@
 
             // Update Progress & Text
             document.getElementById('questionProgressText').innerText = `${currentQuestionIndex + 1} / ${currentQuestions.length}`;
-            document.getElementById('grammarBadge').innerText = q.focus;
+            document.getElementById('grammarBadge').innerText = `${quizCatalog.find(quiz => quiz.id === selectedQuizId).title} · ${q.focus}`;
             document.getElementById('questionText').innerText = q.question;
             document.getElementById('liveScore').innerText = score;
             document.getElementById('streakCount').innerText = streak;
@@ -640,21 +733,27 @@
 
             // Populate Options
             const container = document.getElementById('optionsContainer');
-            container.innerHTML = '';
+            container.replaceChildren();
 
             q.options.forEach((opt, idx) => {
                 const btn = document.createElement('button');
-                btn.className = `option-card w-full p-4 text-left font-semibold rounded-2xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-lexicon-500 dark:hover:border-lexicon-accent text-slate-800 dark:text-white transition flex items-center justify-between group`;
-                btn.onclick = () => selectOption(idx);
-                btn.innerHTML = `
-                    <span class="flex items-center gap-3">
-                        <span class="w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-700 group-hover:bg-lexicon-500 group-hover:text-white text-slate-500 dark:text-slate-300 font-bold text-xs flex items-center justify-center transition">
-                            ${String.fromCharCode(65 + idx)}
-                        </span>
-                        <span class="text-base">${opt}</span>
-                    </span>
-                    <i class="fa-regular fa-circle text-slate-300 dark:text-slate-600 group-hover:text-lexicon-500 text-lg"></i>
-                `;
+                btn.type = 'button';
+                btn.className = 'option-card w-full p-4 text-left font-semibold rounded-2xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-lexicon-500 dark:hover:border-lexicon-accent text-slate-800 dark:text-white transition flex items-center justify-between group';
+                btn.setAttribute('aria-label', `Option ${idx + 1}: ${opt}`);
+                btn.addEventListener('click', () => selectOption(idx));
+                const label = document.createElement('span');
+                label.className = 'flex items-center gap-3';
+                const letter = document.createElement('span');
+                letter.className = 'w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-700 group-hover:bg-lexicon-500 group-hover:text-white text-slate-500 dark:text-slate-300 font-bold text-xs flex items-center justify-center transition';
+                letter.textContent = String.fromCharCode(65 + idx);
+                const text = document.createElement('span');
+                text.className = 'text-base';
+                text.textContent = opt;
+                label.append(letter, text);
+                const icon = document.createElement('i');
+                icon.className = 'fa-regular fa-circle text-slate-300 dark:text-slate-600 group-hover:text-lexicon-500 text-lg';
+                icon.setAttribute('aria-hidden', 'true');
+                btn.append(label, icon);
                 container.appendChild(btn);
             });
 
@@ -678,6 +777,7 @@
 
         function selectOption(selectedIdx) {
             clearInterval(timerInterval);
+            if (userAnswers.length > currentQuestionIndex) return;
             const q = currentQuestions[currentQuestionIndex];
             const isCorrect = selectedIdx === q.correct;
 
@@ -699,21 +799,7 @@
             }
 
             // Update UI Options visual feedback
-            const container = document.getElementById('optionsContainer');
-            const buttons = container.querySelectorAll('button');
-
-            buttons.forEach((btn, idx) => {
-                btn.disabled = true;
-                btn.classList.remove('hover:border-lexicon-500');
-
-                if (idx === q.correct) {
-                    btn.className = "w-full p-4 text-left font-bold rounded-2xl border-2 border-emerald-500 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 flex items-center justify-between";
-                    btn.innerHTML += `<i class="fa-solid fa-circle-check text-emerald-500 text-xl"></i>`;
-                } else if (idx === selectedIdx && !isCorrect) {
-                    btn.className = "w-full p-4 text-left font-bold rounded-2xl border-2 border-red-500 bg-red-50 dark:bg-red-950/40 text-red-800 dark:text-red-300 flex items-center justify-between";
-                    btn.innerHTML += `<i class="fa-solid fa-circle-xmark text-red-500 text-xl"></i>`;
-                }
-            });
+            markAnswerOptions(q.correct, selectedIdx);
 
             // Display Feedback Box
             const feedbackBox = document.getElementById('feedbackBox');
@@ -737,6 +823,7 @@
         }
 
         function handleTimeout() {
+            if (userAnswers.length > currentQuestionIndex) return;
             AudioFX.playWrong();
             streak = 0;
             const q = currentQuestions[currentQuestionIndex];
@@ -747,6 +834,8 @@
                 isCorrect: false
             });
 
+            markAnswerOptions(q.correct, -1);
+
             const feedbackBox = document.getElementById('feedbackBox');
             feedbackBox.classList.remove('hidden');
             feedbackBox.className = "p-5 rounded-2xl mb-6 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 text-amber-900 dark:text-amber-200";
@@ -755,6 +844,20 @@
             document.getElementById('feedbackExplanation').innerText = q.explanation;
 
             document.getElementById('nextBtn').classList.remove('hidden');
+        }
+
+        function markAnswerOptions(correctIdx, selectedIdx) {
+            document.querySelectorAll('#optionsContainer button').forEach((button, idx) => {
+                button.disabled = true;
+                const marker = button.querySelector('i');
+                if (idx === correctIdx) {
+                    button.className = 'option-card w-full p-4 text-left font-bold rounded-2xl border-2 border-emerald-500 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 flex items-center justify-between';
+                    marker.className = 'fa-solid fa-circle-check text-emerald-500 text-xl';
+                } else if (idx === selectedIdx) {
+                    button.className = 'option-card w-full p-4 text-left font-bold rounded-2xl border-2 border-red-500 bg-red-50 dark:bg-red-950/40 text-red-800 dark:text-red-300 flex items-center justify-between';
+                    marker.className = 'fa-solid fa-circle-xmark text-red-500 text-xl';
+                }
+            });
         }
 
         function nextQuestion() {
@@ -774,13 +877,18 @@
             const total = currentQuestions.length;
             const correctCount = userAnswers.filter(a => a.isCorrect).length;
             const accuracy = Math.round((correctCount / total) * 100);
+            document.getElementById('progressBar').style.width = '100%';
+            document.getElementById('progressBar').setAttribute('aria-valuenow', '100');
+            clearInterval(timerInterval);
 
             document.getElementById('finalScoreText').innerText = `${correctCount} / ${total}`;
             document.getElementById('accuracyText').innerText = `${accuracy}%`;
+            document.querySelector('#resultsContainer h2').textContent = accuracy === 100 ? 'Perfect score!' : accuracy >= 80 ? 'Brilliant work!' : accuracy >= 50 ? 'Nice progress!' : 'Keep practising!';
+            document.querySelector('#resultsContainer > div:first-child > p').textContent = `${quizCatalog.find(quiz => quiz.id === selectedQuizId).title} · ${correctCount} correct out of ${total}`;
 
             // Build detailed breakdown list
             const container = document.getElementById('breakdownContainer');
-            container.innerHTML = '';
+            container.replaceChildren();
 
             userAnswers.forEach((ans, idx) => {
                 const item = document.createElement('div');
@@ -789,23 +897,32 @@
                 const userChoice = ans.userOption >= 0 ? ans.question.options[ans.userOption] : "No Answer (Timed Out)";
                 const correctChoice = ans.question.options[ans.question.correct];
 
-                item.innerHTML = `
-                    <div class="flex items-start gap-3">
-                        <span class="w-6 h-6 rounded-full ${ans.isCorrect ? 'bg-emerald-500' : 'bg-red-500'} text-white text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">
-                            ${idx + 1}
-                        </span>
-                        <div class="flex-grow">
-                            <h4 class="font-bold text-slate-800 dark:text-white text-sm sm:text-base">${ans.question.question}</h4>
-                            <div class="text-xs mt-2 space-y-1">
-                                <p class="${ans.isCorrect ? 'text-emerald-700 dark:text-emerald-300' : 'text-red-700 dark:text-red-300'} font-semibold">
-                                    Your Choice: ${userChoice}
-                                </p>
-                                ${!ans.isCorrect ? `<p class="text-emerald-700 dark:text-emerald-300 font-semibold">Correct Answer: ${correctChoice}</p>` : ''}
-                                <p class="text-slate-600 dark:text-slate-400 mt-1 italic">${ans.question.explanation}</p>
-                            </div>
-                        </div>
-                    </div>
-                `;
+                const row = document.createElement('div');
+                row.className = 'flex items-start gap-3';
+                const number = document.createElement('span');
+                number.className = `w-6 h-6 rounded-full ${ans.isCorrect ? 'bg-emerald-500' : 'bg-red-500'} text-white text-xs font-bold flex items-center justify-center shrink-0 mt-0.5`;
+                number.textContent = String(idx + 1);
+                const details = document.createElement('div');
+                details.className = 'flex-grow';
+                const question = document.createElement('h4');
+                question.className = 'font-bold text-slate-800 dark:text-white text-sm sm:text-base';
+                question.textContent = ans.question.question;
+                const response = document.createElement('p');
+                response.className = `${ans.isCorrect ? 'text-emerald-700 dark:text-emerald-300' : 'text-red-700 dark:text-red-300'} font-semibold`;
+                response.textContent = `Your Choice: ${userChoice}`;
+                details.append(question, response);
+                if (!ans.isCorrect) {
+                    const correct = document.createElement('p');
+                    correct.className = 'text-emerald-700 dark:text-emerald-300 font-semibold';
+                    correct.textContent = `Correct Answer: ${correctChoice}`;
+                    details.append(correct);
+                }
+                const explanation = document.createElement('p');
+                explanation.className = 'text-slate-600 dark:text-slate-400 mt-1 italic';
+                explanation.textContent = ans.question.explanation;
+                details.append(explanation);
+                row.append(number, details);
+                item.append(row);
                 container.appendChild(item);
             });
         }
@@ -813,7 +930,9 @@
         function restartQuiz() {
             document.getElementById('resultsContainer').classList.add('hidden');
             document.getElementById('quizDashboard').classList.remove('hidden');
+            renderQuizLibrary();
         }
     </script>
 </body>
 </html>
+
